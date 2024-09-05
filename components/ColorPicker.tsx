@@ -1,31 +1,33 @@
 import { useState, useRef } from "react";
-import { gradientMap, colorVariants } from "@/lib/config";
 import { useColor } from "@/context/ColorContext";
 
-export default function ColorPicker(props) {
-  const { setColor } = useColor();
-  const { onSelectColor } = props;
-  const [selectedIndex, setSelectedIndex] = useState(null);
-  const [customColor, setCustomColor] = useState("#ffffff");
-  const colorInputRef = useRef(null);
+interface ColorPickerProps {
+  onSelectColor: (color: string) => void;
+}
 
-  const handleColorSelect = (color, index) => {
+export default function ColorPicker({ onSelectColor }: ColorPickerProps) {
+  const { setColor } = useColor();
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [customColor, setCustomColor] = useState<string>("#ffffff");
+  const colorInputRef = useRef<HTMLInputElement>(null);
+
+  const handleColorSelect = (color: string, index: number) => {
     setColor(color);
     onSelectColor(color);
     setSelectedIndex(index);
   };
 
   const handleCustomColorSelect = () => {
-    colorInputRef.current.click();
+    colorInputRef.current?.click();
   };
 
-  const handleCustomColorChange = (e) => {
+  const handleCustomColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newColor = e.target.value;
     setCustomColor(newColor);
     handleColorSelect(newColor, colors.length);
   };
 
-  const colors = [
+  const colors: string[] = [
     "bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500",
     "bg-gradient-to-r from-cyan-500 to-blue-500",
     "bg-gradient-to-r from-violet-200 to-pink-200",

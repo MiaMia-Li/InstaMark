@@ -3,7 +3,7 @@ import { ColorProvider, useColor } from "@/context/ColorContext";
 import ColorPicker from "./ColorPicker";
 import Exinfo from "./Exinfo";
 import Image from "next/image";
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, ChangeEvent } from "react";
 import Exif from "exif-js";
 import { CAMERA_BRAND, COLOR_MAP } from "@/lib/config";
 import { tailwindToCSS } from "@/lib/color";
@@ -16,7 +16,7 @@ import { IoCloudUploadOutline } from "react-icons/io5";
 
 function PicContent() {
   const { color, setColor } = useColor();
-  const [imageSrc, setImageSrc] = useState(null);
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [exifData, setExifData] = useState({});
   const [padding, setPadding] = useState(20);
   const [borderRadius, setBorderRadius] = useState(10);
@@ -24,19 +24,22 @@ function PicContent() {
   const [textColor, setTextColor] = useState("dark"); // 新增状态
   const [showCameraInfo, setShowCameraInfo] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
-  const fileInputRef = useRef(null);
-  const exportRef = useRef(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const exportRef = useRef<HTMLDivElement>(null);
 
   const handleFile = useCallback((file: File) => {
     if (file) {
       const reader = new FileReader();
-      reader.onload = (event) => {
-        setImageSrc(event.target.result as string);
-        loadExifData(file);
+      reader.onload = (event: ProgressEvent<FileReader>) => {
+        if (event.target && event.target.result) {
+          setImageSrc(event.target.result as string);
+          loadExifData(file);
+        }
       };
       reader.readAsDataURL(file);
     }
   }, []);
+
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       handleFile(acceptedFiles[0]);
@@ -56,20 +59,22 @@ function PicContent() {
     }
   };
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
+  const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (event) => {
-        setImageSrc(event.target.result);
-        loadExifData(file);
+      reader.onload = (event: ProgressEvent<FileReader>) => {
+        if (event.target && event.target.result) {
+          setImageSrc(event.target.result as string);
+          loadExifData(file);
+        }
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const loadExifData = (file) => {
-    Exif.getData(file, function () {
+  const loadExifData = (file: any) => {
+    Exif.getData(file, function (this: any) {
       console.log(
         "-Exif-",
         Exif.getAllTags(this),
@@ -93,7 +98,7 @@ function PicContent() {
         latitude = formatDMS(gpsLatitude, latitudeRef);
         longitude = formatDMS(gpsLongitude, longitudeRef);
       }
-      function formatDMS(coordinates, ref) {
+      function formatDMS(coordinates: any, ref: any) {
         const degrees = coordinates[0].numerator / coordinates[0].denominator;
         const minutes = coordinates[1].numerator / coordinates[1].denominator;
         const seconds = coordinates[2].numerator / coordinates[2].denominator;
@@ -176,7 +181,7 @@ function PicContent() {
           if (cssGradient.startsWith("linear-gradient")) {
             const colors = cssGradient.match(/rgba?\([\d\s,\.]+\)|#[a-f\d]+/gi);
             if (colors) {
-              colors.forEach((color, index) => {
+              colors.forEach((color: string, index: number) => {
                 gradient.addColorStop(index / (colors.length - 1), color);
               });
             }

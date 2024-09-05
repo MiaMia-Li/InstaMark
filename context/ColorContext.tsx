@@ -1,11 +1,17 @@
 import React, { createContext, useContext, useState } from "react";
 
-const ColorContext = createContext();
+interface ColorContextType {
+  color: string;
+  setColor: (color: string) => void;
+}
 
-export const ColorProvider = ({ children }) => {
-  const [color, setColor] = useState(
-    "bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500"
-  );
+const ColorContext = createContext<ColorContextType | undefined>(undefined);
+
+export const ColorProvider: React.FC<React.PropsWithChildren<{}>> = ({
+  children,
+}) => {
+  const [color, setColor] = useState("#ffffff");
+
   return (
     <ColorContext.Provider value={{ color, setColor }}>
       {children}
@@ -13,4 +19,10 @@ export const ColorProvider = ({ children }) => {
   );
 };
 
-export const useColor = () => useContext(ColorContext);
+export const useColor = (): ColorContextType => {
+  const context = useContext(ColorContext);
+  if (context === undefined) {
+    throw new Error("useColor must be used within a ColorProvider");
+  }
+  return context;
+};

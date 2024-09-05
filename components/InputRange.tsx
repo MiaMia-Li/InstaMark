@@ -1,5 +1,14 @@
-export default function InputRange(props) {
-  const { num, handleChange } = props;
+import React from "react";
+
+interface InputRangeProps {
+  num: number;
+  handleChange: (value: number) => void;
+}
+
+export default function InputRange({
+  num,
+  handleChange,
+}: InputRangeProps): JSX.Element {
   return (
     <div className="inputRange relative flex justify-center items-center">
       <input
@@ -7,7 +16,9 @@ export default function InputRange(props) {
         name="inputName"
         id="inputName"
         value={num}
-        onChange={(e) => handleChange(Number(e.target.value))}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          handleChange(Number(e.target.value))
+        }
         min="0"
         step="1"
         max="50"

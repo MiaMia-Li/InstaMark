@@ -7,8 +7,17 @@ import Btn3d from "./Btn3d";
 import InputRange from "./InputRange";
 import Divider from "./Divider";
 import { isEmptyObj } from "@/lib/color";
+interface PanelProps {
+  padding: number;
+  borderRadius: number;
+  textColor: string;
+  onChange: (method: string, value: any) => void;
+  exifData: Record<string, any>;
+  showCameraInfo: boolean;
+  imageSrc: string | null;
+}
 
-export default function Panel(props) {
+export default function Panel(props: PanelProps) {
   const {
     padding,
     borderRadius,

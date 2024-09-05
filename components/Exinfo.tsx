@@ -4,8 +4,23 @@ import { getTextColors, isEmptyObj } from "@/lib/color";
 import { CAMERA_BRAND } from "@/lib/config";
 import { GrLocation } from "react-icons/gr";
 import { MdDateRange } from "react-icons/md";
+interface ExinfoProps {
+  data: {
+    make?: string;
+    model?: string;
+    date?: string;
+    shutterSpeed?: string;
+    iso?: string;
+    aperture?: string;
+    latitude?: string;
+    longitude?: string;
+  };
+  type?: string;
+  bgColor?: string;
+  textColor?: string;
+}
 
-export default function Exinfo(props) {
+export default function Exinfo(props: ExinfoProps) {
   const { data, type = "default", bgColor, textColor } = props;
   const {
     make,

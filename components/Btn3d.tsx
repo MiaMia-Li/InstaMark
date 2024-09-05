@@ -1,6 +1,13 @@
+import React from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-export default function Btn3d(props) {
-  const { text, handleClick, loading } = props;
+
+interface Btn3dProps {
+  text: string;
+  handleClick: () => void;
+  loading: boolean;
+}
+
+const Btn3d: React.FC<Btn3dProps> = ({ text, handleClick, loading }) => {
   return (
     <button
       className={`relative text-lg w-full ${
@@ -23,7 +30,7 @@ export default function Btn3d(props) {
         {loading ? (
           <>
             <AiOutlineLoading3Quarters className="inline-block animate-spin text-2xl mr-2" />
-            Working....
+            Wokring...
           </>
         ) : (
           text
@@ -31,4 +38,6 @@ export default function Btn3d(props) {
       </div>
     </button>
   );
-}
+};
+
+export default Btn3d;
