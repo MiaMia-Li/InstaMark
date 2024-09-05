@@ -51,15 +51,22 @@ export default function ColorPicker(props) {
         </div>
       ))}
       <div
-        className={`w-12 h-12 m-1 text-sm cursor-pointer rounded-md relative transition-all duration-300 ease-in-out ${
-          selectedIndex === colors.length ? "ring-2 ring-offset-2" : ""
+        className={`w-12 h-12 m-1 text-sm cursor-pointer rounded-md relative transition-all duration-300 ease-in-out overflow-hidden border-2 border-gray-300 hover:border-gray-500 ${
+          selectedIndex === colors.length
+            ? "ring-2 ring-offset-2 ring-blue-500"
+            : ""
         }`}
-        style={{ background: customColor }}
         onClick={handleCustomColorSelect}>
-        Custom
+        <div
+          className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300"
+          style={{ background: customColor }}>
+          <span className="text-xs font-semibold text-gray-700 bg-white bg-opacity-70 px-1 py-0.5 rounded">
+            Custom
+          </span>
+        </div>
         {selectedIndex === colors.length && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-2 h-2 bg-white rounded-full animate-ping"></div>
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-ping"></div>
           </div>
         )}
         <input

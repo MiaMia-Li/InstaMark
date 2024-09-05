@@ -31,3 +31,36 @@ body {
     text-wrap: balance;
   }
 }
+
+.background-grid {
+  min-height: 100vh;
+  background-color: #f0f0f0;
+  background-image: linear-gradient(to right, #e0e0e0 1px, transparent 1px),
+    linear-gradient(to bottom, #e0e0e0 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.content-container {
+  /* max-width: 1200px; */
+  /* margin: 0 auto; */
+  /* padding: 20px; */
+  min-height: 100vh;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.fixed-panel {
+  position: fixed;
+  top: 100px;
+  /* bottom: 20px; */
+  right: 0;
+  width: 30%;
+  max-width: 500px;
+  /* width: 300px; 根据需要调整宽度 */
+}
+
+.pic-content {
+  /* margin-right: 300px; */
+  padding-right: 60px;
+  width: 70%;
+}

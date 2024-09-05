@@ -1,3 +1,11 @@
+import {
+  RiTwitterXFill,
+  RiLinkedinBoxFill,
+  RiInstagramFill,
+  RiWeiboFill,
+  RiGithubFill,
+} from "react-icons/ri";
+
 export const CAMERA_BRAND = [
   { key: "Canon", src: "/camera/Canon.svg" },
   { key: "Fujifilm", src: "/camera/Fujifilm.svg" },
@@ -18,3 +26,48 @@ export const COLOR_MAP = new Map([
   ["bg-gradient-to-r from-slate-500 to-slate-800", "text-white"],
   ["bg-gradient-to-r from-fuchsia-500 to-cyan-500", "text-white"],
 ]);
+
+export const SOCIAL_MEDIA = [
+  //   {
+  //     id: "whatsapp",
+  //     icon: "whatsapp.svg", // 你可以使用图标文件的路径
+  //     href: "https://github.com/your-profile",
+  //     description: "Follow me on GitHub",
+  //   },
+  {
+    id: "twitter",
+    icon: "media/twitter.svg",
+    href: "https://x.com/Sep_Miamia",
+    description: "Follow me on Twitter",
+    svg: RiTwitterXFill,
+  },
+  {
+    id: "linkedin",
+    icon: "media/linkedin.svg",
+    href: "https://www.linkedin.com/in/mengyao-li-software/",
+    description: "Connect with me on LinkedIn",
+    svg: RiLinkedinBoxFill,
+  },
+  // {
+  //   id: "instagram",
+  //   icon: "media/instagram.svg",
+  //   href: "https://www.instagram.com/sep.miamia/",
+  //   description: "Follow me on Instagram",
+  //   svg: RiInstagramFill,
+  // },
+
+  // {
+  //   id: "weibo",
+  //   icon: "media/weibo.svg",
+  //   href: "https://m.weibo.cn/profile/2887635897",
+  //   description: "Follow me on Instagram",
+  //   svg: RiWeiboFill,
+  // },
+  {
+    id: "github",
+    icon: "media/github.svg",
+    href: "https://github.com/MiaMia-Li",
+    description: "Follow me on Github",
+    svg: RiGithubFill,
+  },
+];

@@ -6,10 +6,13 @@ import Image from "next/image";
 import React, { useState, useRef, useCallback } from "react";
 import Exif from "exif-js";
 import { CAMERA_BRAND, COLOR_MAP } from "@/lib/config";
+import { tailwindToCSS } from "@/lib/color";
 import html2canvas from "html2canvas";
 import { useDropzone } from "react-dropzone";
 import Btn3d from "./Btn3d";
 import InputRange from "./InputRange";
+import Panel from "./Panel";
+import { IoCloudUploadOutline } from "react-icons/io5";
 
 function PicContent() {
   const { color, setColor } = useColor();
@@ -19,6 +22,8 @@ function PicContent() {
   const [borderRadius, setBorderRadius] = useState(10);
   const [backgroundColor, setBackgroundColor] = useState("#fff");
   const [textColor, setTextColor] = useState("dark"); // 新增状态
+  const [showCameraInfo, setShowCameraInfo] = useState(true);
+  const [isExporting, setIsExporting] = useState(false);
   const fileInputRef = useRef(null);
   const exportRef = useRef(null);
 
@@ -117,167 +122,191 @@ function PicContent() {
 
   const handleExport = async () => {
     if (exportRef.current) {
-      const canvas = await html2canvas(exportRef.current);
-      const image = canvas.toDataURL("image/png");
-      const link = document.createElement("a");
-      link.href = image;
-      link.download = "image-with-exif.png";
-      link.click();
+      setIsExporting(true);
+      const element = exportRef.current;
+      const { width, height } = element.getBoundingClientRect();
+
+      // 创建一个临时的包装器div
+      const wrapper = document.createElement("div");
+      wrapper.style.width = `${width}px`;
+      wrapper.style.height = `${height}px`;
+      wrapper.style.overflow = "hidden";
+      wrapper.appendChild(element.cloneNode(true));
+
+      // 将包装器添加到body中，但设置为不可见
+      document.body.appendChild(wrapper);
+      wrapper.style.position = "absolute";
+      wrapper.style.left = "-9999px";
+      try {
+        await document.fonts.ready;
+        const scale = 4;
+        const canvas = await html2canvas(wrapper, {
+          width: width,
+          height: height,
+          scale: scale,
+          useCORS: true,
+          backgroundColor: null,
+          logging: false,
+          imageTimeout: 0, // 禁用图片加载超时
+          allowTaint: true, //
+          onclone: (clonedDoc) => {
+            // 在克隆的文档中应用所有计算后的样式
+            const clonedElement = clonedDoc.body.querySelector(
+              "[data-export-wrapper]"
+            );
+            if (clonedElement) {
+              const styles = window.getComputedStyle(element);
+              Object.values(styles).forEach((key) => {
+                // @ts-ignore
+                clonedElement.style[key] = styles[key];
+              });
+            }
+          },
+        });
+
+        // 创建一个新的canvas来绘制背景和内容
+        const finalCanvas = document.createElement("canvas");
+        finalCanvas.width = width * scale;
+        finalCanvas.height = height * scale;
+        const ctx = finalCanvas.getContext("2d");
+        if (ctx) {
+          // 绘制背景
+          const gradient = ctx.createLinearGradient(0, 0, width * 2, 0);
+          const cssGradient = tailwindToCSS(backgroundColor);
+          if (cssGradient.startsWith("linear-gradient")) {
+            const colors = cssGradient.match(/rgba?\([\d\s,\.]+\)|#[a-f\d]+/gi);
+            if (colors) {
+              colors.forEach((color, index) => {
+                gradient.addColorStop(index / (colors.length - 1), color);
+              });
+            }
+          } else {
+            gradient.addColorStop(0, cssGradient);
+            gradient.addColorStop(1, cssGradient);
+          }
+          ctx.fillStyle = gradient;
+          ctx.fillRect(0, 0, width * scale, height * scale);
+
+          // 绘制内容
+          ctx.drawImage(canvas, 0, 0);
+        }
+
+        // 导出图片
+        const image = finalCanvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.href = image;
+        link.download = "image-with-exif.png";
+        link.click();
+      } finally {
+        // 清理临时元素
+        document.body.removeChild(wrapper);
+        setIsExporting(false);
+      }
     }
   };
 
+  const handleChange = useCallback((method: string, value: any) => {
+    const methodMap = {
+      setPadding,
+      setBorderRadius,
+      setBackgroundColor,
+      setTextColor,
+      setExifData,
+      setShowCameraInfo,
+    };
+
+    if (method in methodMap) {
+      methodMap[method](value);
+    }
+  }, []);
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
-      <h1 className="text-2xl font-bold mb-4">EXIF Viewer</h1>
-
-      <div
-        className={`${backgroundColor} shadow-md rounded p-4 duration-200 transform-gpu transition-all ease-linear md:w-2/3 w-full`}
-        ref={exportRef}
-        style={{
-          padding: padding,
-          borderRadius: borderRadius,
-          backgroundColor: backgroundColor,
-        }}>
-        <div className="w-full">
-          {!imageSrc ? (
-            <div
-              {...getRootProps()}
-              className={`${
-                textColor === "dark" ? "border-slate-800" : "border-slate-50"
-              } w-full h-64 border-2 border-dashed rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 transition-colors duration-300`}>
-              <input {...getInputProps()} />
-              <svg
-                className={`w-12 h-12 mb-4 ${
-                  textColor === "dark" ? "text-slate-800" : "text-slate-50"
-                }`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+    <div className="flex w-full flex-col md:flex-row">
+      <div className="w-full md:w-[calc(100%-300px)] md:pr-8">
+        <div
+          className={`${backgroundColor} shadow-md rounded p-4 duration-200 transform-gpu transition-all ease-linear w-full`}
+          ref={exportRef}
+          style={{
+            padding: padding,
+            borderRadius: borderRadius,
+            backgroundColor: backgroundColor,
+          }}>
+          <div className="w-full">
+            {!imageSrc ? (
+              <div
+                {...getRootProps()}
+                className={`
+                w-full h-64 border-2 border-dashed rounded-lg 
+                flex flex-col items-center justify-center cursor-pointer 
+                transition-all duration-300 ease-in-out
+                border-gray-300 text-gray-500
+                hover:border-blue-500 hover:bg-blue-50 hover:shadow-lg
+              `}>
+                <input {...getInputProps()} />
+                <IoCloudUploadOutline className="w-10 h-10 transition-colors duration-300 group-hover:text-blue-500" />
+                <p className="mt-2 transition-colors duration-300 group-hover:text-blue-500">
+                  Drag or click your Image here!
+                </p>
+              </div>
+            ) : (
+              <div>
+                <Image
+                  src={imageSrc}
+                  alt="Uploaded"
+                  width={500}
+                  height={300}
+                  className="w-full h-auto"
+                  unoptimized
                 />
-              </svg>
-              {isDragActive ? (
-                <p
-                  className={`${
-                    textColor === "dark" ? "text-slate-800" : "text-slate-50"
-                  }`}>
-                  将文件拖放到此处...
-                </p>
-              ) : (
-                <p
-                  className={`${
-                    textColor === "dark" ? "text-slate-800" : "text-slate-50"
-                  }`}>
-                  拖放图片文件到此处，或点击选择文件
-                </p>
-              )}
-            </div>
-          ) : (
-            <div>
-              <Image
-                src={imageSrc}
-                alt="Uploaded"
-                width={500}
-                height={300}
-                className="w-full h-auto"
-                unoptimized
-              />
-            </div>
-          )}
+              </div>
+            )}
 
-          <div className="text-left pt-4">
-            <Exinfo
-              bgColor={backgroundColor}
-              textColor={textColor}
-              data={exifData}
-            />
+            {showCameraInfo && (
+              <div className="text-left pt-4">
+                <Exinfo
+                  bgColor={backgroundColor}
+                  textColor={textColor}
+                  data={exifData}
+                />
+              </div>
+            )}
           </div>
         </div>
+
+        {imageSrc && (
+          <div className="flex items-center w-full my-5 gap-5">
+            <div className="flex-1">
+              <Btn3d handleClick={handleReupload} text="Upload" />
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                accept="image/*"
+                className="hidden"
+              />
+            </div>
+            <div className="flex-1">
+              <Btn3d
+                handleClick={handleExport}
+                text="Export"
+                loading={isExporting}
+              />
+            </div>
+          </div>
+        )}
       </div>
-
-      {imageSrc && (
-        <div className="flex items-center w-full max-w-lg my-5 gap-5">
-          <div className="flex-1">
-            <Btn3d handleClick={handleReupload} text="Upload" />
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileChange}
-              accept="image/*"
-              className="hidden"
-            />
-          </div>
-          <div className="flex-1">
-            <Btn3d handleClick={handleExport} text="Export" />
-          </div>
-        </div>
-      )}
-      <div className="w-full max-w-lg mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2">
-          Select Background Color:
-        </label>
-        <div className="flex flex-wrap mb-4">
-          <ColorPicker onSelectColor={(color) => setBackgroundColor(color)} />
-        </div>
-        <div className="flex flex-col space-y-4">
-          <div className="flex items-center justify-between">
-            <label className="text-gray-700 text-sm font-bold">Padding</label>
-            <div className="w-2/3">
-              <InputRange
-                num={padding}
-                handleChange={(num) => setPadding(num)}
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <label className="text-gray-700 text-sm font-bold">Radius</label>
-            <div className="w-2/3">
-              <InputRange
-                num={borderRadius}
-                handleChange={(num) => setBorderRadius(num)}
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <label className="text-gray-700 text-sm font-bold">
-              Text Color
-            </label>
-            <select
-              value={textColor}
-              onChange={(e) => setTextColor(e.target.value)}
-              className="w-2/3 px-4 py-2 rounded bg-transparent text-gray-800">
-              <option value="dark">Dark</option>
-              <option value="light">Light</option>
-            </select>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <label className="text-gray-700 text-sm font-bold">
-              Camera Logo
-            </label>
-            <select
-              value={exifData.make}
-              onChange={(e) =>
-                setExifData({
-                  ...exifData,
-                  make: e.target.value,
-                })
-              }
-              className="w-2/3 px-4 py-2 rounded bg-transparent text-gray-800">
-              {CAMERA_BRAND.map((brand) => (
-                <option key={brand.key} value={brand.key}>
-                  {brand.key}
-                </option>
-              ))}
-            </select>
-          </div>
+      <div className="w-full md:w-[300px]">
+        <div className="static md:fixed md:w-[300px] bg-transparent z-20 rounded-lg shadow-lg border border-gray-200 p-6 transition-shadow duration-300 ease-in-out hover:shadow-xl">
+          <Panel
+            textColor={textColor}
+            padding={padding}
+            borderRadius={borderRadius}
+            backgroundColor={backgroundColor}
+            exifData={exifData}
+            showCameraInfo={showCameraInfo}
+            onChange={handleChange}
+            imageSrc={imageSrc}
+          />
         </div>
       </div>
     </div>

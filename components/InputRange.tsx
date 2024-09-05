@@ -1,7 +1,7 @@
 export default function InputRange(props) {
   const { num, handleChange } = props;
   return (
-    <div className="inputRange relative w-[350px] flex justify-center items-center">
+    <div className="inputRange relative flex justify-center items-center">
       <input
         type="range"
         name="inputName"

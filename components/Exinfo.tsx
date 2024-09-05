@@ -1,7 +1,9 @@
 import Image from "next/image";
 import { useMemo } from "react";
-import { getTextColors } from "@/lib/color";
+import { getTextColors, isEmptyObj } from "@/lib/color";
 import { CAMERA_BRAND } from "@/lib/config";
+import { GrLocation } from "react-icons/gr";
+import { MdDateRange } from "react-icons/md";
 
 export default function Exinfo(props) {
   const { data, type = "default", bgColor, textColor } = props;
@@ -37,11 +39,11 @@ export default function Exinfo(props) {
         </p>
 
         <p
-          className="text-sm font-mono text-nowrap"
+          className="text-sm text-nowrap flex gap-[5px]"
           style={{ color: textColors.desc }}>
-          {iso && <>ISO{iso}</>}
-          {aperture && <>F{aperture} </>}
-          {shutterSpeed && <>{shutterSpeed}s</>}
+          {iso && <span>ISO{iso}</span>}
+          {aperture && <span>F{aperture} </span>}
+          {shutterSpeed && <span>{shutterSpeed}s</span>}
         </p>
       </div>
       {cameraSrc && (
@@ -55,10 +57,18 @@ export default function Exinfo(props) {
       )}
       <div>
         {latitude && longitude && (
-          <p className="text-sm font-mono">{`${latitude} ${longitude}`}</p>
+          <p
+            className="text-sm flex items-center gap-[2px]"
+            style={{ color: textColors.desc }}>
+            {/* <GrLocation /> */}
+            {`${latitude} ${longitude}`}
+          </p>
         )}
-        {data && (
-          <p className="font-mono text-sm" style={{ color: textColors.desc }}>
+        {date && (
+          <p
+            className="text-sm flex items-center gap-[2px]"
+            style={{ color: textColors.desc }}>
+            {/* <MdDateRange /> */}
             {date}
           </p>
         )}

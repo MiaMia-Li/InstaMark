@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
-import withSvgr from "next-svgr";
-const nextConfig = withSvgr({});
+const nextConfig = {
+  images: {
+    domains: ["cdn.buymeacoffee.com", "img.buymeacoffee.com"],
+  },
+};
 
 export default nextConfig;
