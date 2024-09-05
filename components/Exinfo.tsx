@@ -34,7 +34,7 @@ export default function Exinfo(props: ExinfoProps) {
   } = data;
 
   const textColors = useMemo(() => {
-    return getTextColors(textColor);
+    return getTextColors(textColor || ""); // 提供默认值
   }, [textColor]);
 
   const cameraSrc = useMemo(() => {

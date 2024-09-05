@@ -4,10 +4,14 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 interface Btn3dProps {
   text: string;
   handleClick: () => void;
-  loading: boolean;
+  loading?: boolean;
 }
 
-const Btn3d: React.FC<Btn3dProps> = ({ text, handleClick, loading }) => {
+const Btn3d: React.FC<Btn3dProps> = ({
+  text,
+  handleClick,
+  loading = false,
+}) => {
   return (
     <button
       className={`relative text-lg w-full ${

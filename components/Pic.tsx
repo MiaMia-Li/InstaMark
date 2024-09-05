@@ -3,7 +3,14 @@ import { ColorProvider, useColor } from "@/context/ColorContext";
 import ColorPicker from "./ColorPicker";
 import Exinfo from "./Exinfo";
 import Image from "next/image";
-import React, { useState, useRef, useCallback, ChangeEvent } from "react";
+import React, {
+  useState,
+  useRef,
+  useCallback,
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import Exif from "exif-js";
 import { CAMERA_BRAND, COLOR_MAP } from "@/lib/config";
 import { tailwindToCSS } from "@/lib/color";
@@ -211,7 +218,7 @@ function PicContent() {
   };
 
   const handleChange = useCallback((method: string, value: any) => {
-    const methodMap = {
+    const methodMap: { [key: string]: Dispatch<SetStateAction<any>> } = {
       setPadding,
       setBorderRadius,
       setBackgroundColor,
@@ -221,7 +228,7 @@ function PicContent() {
     };
 
     if (method in methodMap) {
-      methodMap[method](value);
+      (methodMap as any)[method](value);
     }
   }, []);
 
@@ -306,7 +313,6 @@ function PicContent() {
             textColor={textColor}
             padding={padding}
             borderRadius={borderRadius}
-            backgroundColor={backgroundColor}
             exifData={exifData}
             showCameraInfo={showCameraInfo}
             onChange={handleChange}
