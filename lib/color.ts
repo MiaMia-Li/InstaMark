@@ -1,13 +1,4 @@
 export const getTextColors = (bgColor: string) => {
-  // let isDarkBackground;
-  // if (bgColor.startsWith("#")) {
-  //   isDarkBackground = isDarkColor(bgColor);
-  // } else {
-  //   isDarkBackground =
-  //     bgColor.includes("slate") ||
-  //     bgColor.includes("teal") ||
-  //     bgColor.includes("fuchsia");
-  // }
   return bgColor === "dark"
     ? { main: "rgb(15 23 42)", desc: "rgb(71 85 105)" }
     : { main: "rgb(255 255 255)", desc: "rgb(226 232 240)" };

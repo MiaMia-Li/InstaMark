@@ -18,10 +18,11 @@ interface ExinfoProps {
   type?: string;
   bgColor?: string;
   textColor?: string;
+  textSize?: string;
 }
 
 export default function Exinfo(props: ExinfoProps) {
-  const { data, type = "default", bgColor, textColor } = props;
+  const { data, type = "default", bgColor, textColor, textSize } = props;
   const {
     make,
     model,
@@ -46,47 +47,51 @@ export default function Exinfo(props: ExinfoProps) {
     return brand ? brand.src : null;
   }, [make]);
 
-  return (
-    <div className={`flex items-center justify-between`}>
-      <div>
-        <p className={`font-bold mb-1`} style={{ color: textColors.main }}>
-          {model}
-        </p>
+  const textSizeClass = useMemo(() => {
+    return textSize ? `text-${textSize}` : "text-sm";
+  }, [textSize]);
 
-        <p
-          className="text-sm text-nowrap flex gap-[5px]"
-          style={{ color: textColors.desc }}>
-          {iso && <span>ISO{iso}</span>}
-          {aperture && <span>F{aperture} </span>}
-          {shutterSpeed && <span>{shutterSpeed}s</span>}
-        </p>
-      </div>
+  return (
+    <div
+      className={`flex items-center justify-between ${textSizeClass} transition-all duration-300 ease-in-out`}
+      style={{ color: textColors.desc }}>
+      {model && (
+        <div>
+          <p className="font-bold mb-1" style={{ color: textColors.main }}>
+            {model}
+          </p>
+
+          <p
+            className="text-nowrap flex gap-[5px]"
+            style={{ color: textColors.desc }}>
+            {iso && <span>ISO{iso}</span>}
+            {aperture && <span>F{aperture} </span>}
+            {shutterSpeed && <span>{shutterSpeed}s</span>}
+          </p>
+        </div>
+      )}
       {cameraSrc && (
         <Image
           src={cameraSrc}
           alt=""
           width={0}
-          height={35}
-          className="object-contain w-1/3 h-[35px]"
+          height={0}
+          className={`object-contain w-auto ${
+            textSize === "sm"
+              ? "h-[25px]"
+              : textSize === "md"
+              ? "h-[35px]"
+              : "h-[45px]"
+          }`}
         />
       )}
       <div>
         {latitude && longitude && (
-          <p
-            className="text-sm flex items-center gap-[2px]"
-            style={{ color: textColors.desc }}>
-            {/* <GrLocation /> */}
+          <p className="flex items-center gap-[2px]">
             {`${latitude} ${longitude}`}
           </p>
         )}
-        {date && (
-          <p
-            className="text-sm flex items-center gap-[2px]"
-            style={{ color: textColors.desc }}>
-            {/* <MdDateRange /> */}
-            {date}
-          </p>
-        )}
+        {date && <p className="flex items-center gap-[2px]">{date}</p>}
       </div>
     </div>
   );

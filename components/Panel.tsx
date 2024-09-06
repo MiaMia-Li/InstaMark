@@ -11,10 +11,12 @@ interface PanelProps {
   padding: number;
   borderRadius: number;
   textColor: string;
+  textSize: string;
   onChange: (method: string, value: any) => void;
   exifData: Record<string, any>;
   showCameraInfo: boolean;
   imageSrc: string | null;
+  noExif?: boolean;
 }
 
 export default function Panel(props: PanelProps) {
@@ -26,6 +28,8 @@ export default function Panel(props: PanelProps) {
     exifData,
     showCameraInfo,
     imageSrc,
+    noExif,
+    textSize,
   } = props;
   console.log("-exifData", exifData);
   return (
@@ -71,7 +75,7 @@ export default function Panel(props: PanelProps) {
           />
         </div>
 
-        {showCameraInfo && imageSrc && isEmptyObj(exifData) && (
+        {showCameraInfo && imageSrc && noExif && (
           <div className="text-sm text-gray-500 bg-gray-100 rounded-md p-2 mt-2">
             😮 Opps~~ No photo information obtained
           </div>
@@ -80,24 +84,28 @@ export default function Panel(props: PanelProps) {
         <div className="flex items-center justify-between">
           <label className="text-gray-700 text-sm">Text Color</label>
           <select
-            disabled={!showCameraInfo}
             value={textColor}
             onChange={(e) => onChange("setTextColor", e.target.value)}
-            className={`w-2/3 px-4 py-2 rounded bg-transparent text-gray-800 transition duration-150 ease-in-out
-    ${
-      showCameraInfo
-        ? "bg-white border-gray-300 hover:border-blue-500 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-        : "bg-gray-100 border-gray-200 cursor-not-allowed text-gray-500"
-    }`}>
+            className="w-2/3 px-4 py-2 rounded bg-transparent text-gray-800 focus:outline-none">
             <option value="dark">Dark</option>
             <option value="light">Light</option>
+          </select>
+        </div>
+        <div className="flex items-center justify-between">
+          <label className="text-gray-700 text-sm">Text Size</label>
+          <select
+            value={textSize}
+            onChange={(e) => onChange("setTextSize", e.target.value)}
+            className="w-2/3 px-4 py-2 rounded bg-transparent text-gray-800 focus:outline-none">
+            <option value="sm">Small</option>
+            <option value="md">Medium</option>
+            <option value="lg">Large</option>
           </select>
         </div>
 
         <div className="flex items-center justify-between">
           <label className="text-gray-700 text-sm ">Camera Logo</label>
           <select
-            disabled={!showCameraInfo}
             value={exifData?.make}
             onChange={(e) =>
               onChange("setExifData", {
@@ -105,12 +113,7 @@ export default function Panel(props: PanelProps) {
                 make: e.target.value,
               })
             }
-            className={`w-2/3 px-4 py-2 rounded bg-transparent text-gray-800 transition duration-150 ease-in-out
-                ${
-                  showCameraInfo
-                    ? "bg-white border-gray-300 hover:border-blue-500 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                    : "bg-gray-100 border-gray-200 cursor-not-allowed text-gray-500"
-                }`}>
+            className="w-2/3 px-4 py-2 rounded bg-transparent text-gray-800 focus:outline-none">
             <option key="all" value="">
               None
             </option>
@@ -120,6 +123,24 @@ export default function Panel(props: PanelProps) {
               </option>
             ))}
           </select>
+        </div>
+        <div className="flex items-center justify-between">
+          <label htmlFor="dateInput" className="text-gray-700 text-sm">
+            Date
+          </label>
+          <input
+            type="date"
+            id="dateInput"
+            value={exifData?.date}
+            onChange={(e) =>
+              onChange("setExifData", {
+                ...exifData,
+                date: e.target.value,
+              })
+            }
+            className="w-2/3 px-4 py-2 rounded bg-transparent text-gray-800 transition duration-150 ease-in-out
+                  bg-white border-gray-300 hover:border-blue-500 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+          />
         </div>
       </div>
     </div>

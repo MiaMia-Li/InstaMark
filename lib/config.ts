@@ -10,11 +10,23 @@ export const CAMERA_BRAND = [
   { key: "Canon", src: "/camera/Canon.svg" },
   { key: "Fujifilm", src: "/camera/Fujifilm.svg" },
   { key: "Gopro", src: "/camera/Gopro.svg" },
-  { key: "Leica", src: "/camera/Leica.png" },
+  { key: "Leica", src: "/camera/Leica.svg" },
   { key: "Nikon", src: "/camera/Nikon.svg" },
-  { key: "Olympus", src: "/camera/Olympus.png" },
+  { key: "Olympus", src: "/camera/Olympus.svg" },
   { key: "Sony", src: "/camera/Sony.svg" },
   { key: "Apple", src: "/camera/Apple.svg" },
+  { key: "DJI", src: "/camera/DJI.svg" },
+  { key: "Vivo", src: "/camera/Vivo.svg" },
+  { key: "Oppo", src: "/camera/Oppo.svg" },
+  { key: "Huawei", src: "/camera/Huawei.svg" },
+  { key: "Xiaomi", src: "/camera/Xiaomi.svg" },
+  { key: "Realme", src: "/camera/Realme.svg" },
+  { key: "Insta360", src: "/camera/Insta360.svg" },
+  { key: "Panasonic", src: "/camera/Panasonic.svg" },
+  { key: "Pentax", src: "/camera/Pentax.svg" },
+  { key: "Samsung", src: "/camera/Samsung.svg" },
+  { key: "Sigma", src: "/camera/Sigma.svg" },
+
   // 添加更多图片路径
 ];
 

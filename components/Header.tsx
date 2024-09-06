@@ -1,20 +1,26 @@
 import Image from "next/image";
+import { motion } from "framer-motion";
 export default function Header() {
   return (
     <header className="flex items-center justify-between h-[64px] px-4">
       <div className="flex items-center space-x-4">
         <div className="flex-shrink-0">
           <Image
-            src="/logo.png"
+            src="/rainbow.svg"
             width={64}
             height={64}
             alt="PhotoTailor"
-            className="object-contain"
+            className="object-contain transition-transform duration-300 hover:scale-110"
           />
         </div>
-        <h1 className="text-lg md:text-2xl font-semibold tracking-wide text-transparent bg-clip-text bg-gradient-to-l from-pink-400 to-blue-600">
-          Upload, Beautify, and Personalize Your Picture!
-        </h1>
+        <div>
+          <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-600 to-red-600 animate-pulse">
+            Photo Tailor
+          </h1>
+          <p className="text-sm md:text-lg font-medium text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-600 to-red-600 animate-pulse">
+            Upload, Beautify, and Personalize Your Picture!
+          </p>
+        </div>
       </div>
 
       <a

@@ -13,7 +13,7 @@ import React, {
 } from "react";
 import Exif from "exif-js";
 import { CAMERA_BRAND, COLOR_MAP } from "@/lib/config";
-import { tailwindToCSS } from "@/lib/color";
+import { tailwindToCSS, isEmptyObj } from "@/lib/color";
 import html2canvas from "html2canvas";
 import { useDropzone } from "react-dropzone";
 import Btn3d from "./Btn3d";
@@ -28,9 +28,11 @@ function PicContent() {
   const [padding, setPadding] = useState(20);
   const [borderRadius, setBorderRadius] = useState(10);
   const [backgroundColor, setBackgroundColor] = useState("#fff");
-  const [textColor, setTextColor] = useState("dark"); // 新增状态
+  const [textColor, setTextColor] = useState("dark");
+  const [textSize, setTextSize] = useState("md");
   const [showCameraInfo, setShowCameraInfo] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
+  const [noExif, setNoExif] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const exportRef = useRef<HTMLDivElement>(null);
 
@@ -128,6 +130,7 @@ function PicContent() {
         latitude,
         longitude,
       };
+      setNoExif(isEmptyObj(exifInfo));
       setExifData(exifInfo);
     });
   };
@@ -159,19 +162,20 @@ function PicContent() {
           useCORS: true,
           backgroundColor: null,
           logging: false,
-          imageTimeout: 0, // 禁用图片加载超时
-          allowTaint: true, //
+          imageTimeout: 0,
+          allowTaint: true,
           onclone: (clonedDoc) => {
-            // 在克隆的文档中应用所有计算后的样式
             const clonedElement = clonedDoc.body.querySelector(
               "[data-export-wrapper]"
             );
-            if (clonedElement) {
+            if (clonedElement instanceof HTMLElement) {
               const styles = window.getComputedStyle(element);
               Object.values(styles).forEach((key) => {
                 // @ts-ignore
                 clonedElement.style[key] = styles[key];
               });
+              // 确保圆角效果被应用
+              clonedElement.style.borderRadius = `${borderRadius}px`;
             }
           },
         });
@@ -183,6 +187,38 @@ function PicContent() {
         const ctx = finalCanvas.getContext("2d");
         if (ctx) {
           // 绘制背景
+          ctx.save();
+          ctx.beginPath();
+          ctx.moveTo(borderRadius * scale, 0);
+          ctx.lineTo(finalCanvas.width - borderRadius * scale, 0);
+          ctx.quadraticCurveTo(
+            finalCanvas.width,
+            0,
+            finalCanvas.width,
+            borderRadius * scale
+          );
+          ctx.lineTo(
+            finalCanvas.width,
+            finalCanvas.height - borderRadius * scale
+          );
+          ctx.quadraticCurveTo(
+            finalCanvas.width,
+            finalCanvas.height,
+            finalCanvas.width - borderRadius * scale,
+            finalCanvas.height
+          );
+          ctx.lineTo(borderRadius * scale, finalCanvas.height);
+          ctx.quadraticCurveTo(
+            0,
+            finalCanvas.height,
+            0,
+            finalCanvas.height - borderRadius * scale
+          );
+          ctx.lineTo(0, borderRadius * scale);
+          ctx.quadraticCurveTo(0, 0, borderRadius * scale, 0);
+          ctx.closePath();
+          ctx.clip();
+
           const gradient = ctx.createLinearGradient(0, 0, width * 2, 0);
           const cssGradient = tailwindToCSS(backgroundColor);
           if (cssGradient.startsWith("linear-gradient")) {
@@ -197,10 +233,11 @@ function PicContent() {
             gradient.addColorStop(1, cssGradient);
           }
           ctx.fillStyle = gradient;
-          ctx.fillRect(0, 0, width * scale, height * scale);
+          ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
 
           // 绘制内容
           ctx.drawImage(canvas, 0, 0);
+          ctx.restore();
         }
 
         // 导出图片
@@ -225,6 +262,7 @@ function PicContent() {
       setTextColor,
       setExifData,
       setShowCameraInfo,
+      setTextSize,
     };
 
     if (method in methodMap) {
@@ -278,6 +316,7 @@ function PicContent() {
                 <Exinfo
                   bgColor={backgroundColor}
                   textColor={textColor}
+                  textSize={textSize}
                   data={exifData}
                 />
               </div>
@@ -310,6 +349,7 @@ function PicContent() {
       <div className="w-full md:w-[300px]">
         <div className="static md:fixed md:w-[300px] bg-transparent z-20 rounded-lg shadow-lg border border-gray-200 p-6 transition-shadow duration-300 ease-in-out hover:shadow-xl">
           <Panel
+            textSize={textSize}
             textColor={textColor}
             padding={padding}
             borderRadius={borderRadius}
@@ -317,6 +357,7 @@ function PicContent() {
             showCameraInfo={showCameraInfo}
             onChange={handleChange}
             imageSrc={imageSrc}
+            noExif={noExif}
           />
         </div>
       </div>
