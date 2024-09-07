@@ -19,7 +19,8 @@ import { useDropzone } from "react-dropzone";
 import Btn3d from "./Btn3d";
 import InputRange from "./InputRange";
 import Panel from "./Panel";
-import { IoCloudUploadOutline } from "react-icons/io5";
+import FloatPanel from "./FloatPanel";
+import ColorPop from "./ColorPop";
 
 function PicContent() {
   const { color, setColor } = useColor();
@@ -33,6 +34,7 @@ function PicContent() {
   const [showCameraInfo, setShowCameraInfo] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
   const [noExif, setNoExif] = useState(false);
+  const [showPanel, setShowPanel] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const exportRef = useRef<HTMLDivElement>(null);
 
@@ -271,8 +273,18 @@ function PicContent() {
   }, []);
 
   return (
-    <div className="flex w-full flex-col md:flex-row">
-      <div className="w-full md:w-[calc(100%-300px)] md:pr-8">
+    <div className="flex w-full flex-col items-center sm:px-10">
+      <div className="w-full max-w-4xl">
+        <div className="text-center my-8">
+          <h1 className="text-3xl font-bold mb-4 text-indigo-600">
+            Upload, Beautify, and Personalize Your Picture
+          </h1>
+          <p className="text-gray-700 leading-relaxed max-w-2xl mx-auto">
+            Discover our free, privacy-focused image tool. Enhance your photos
+            locally, without uploads server. Enjoy secure, cost-free
+            personalization. Transform your pictures easily and safely.
+          </p>
+        </div>
         <div
           className={`${backgroundColor} shadow-md rounded p-4 duration-200 transform-gpu transition-all ease-linear w-full`}
           ref={exportRef}
@@ -293,10 +305,8 @@ function PicContent() {
                 hover:border-blue-500 hover:bg-blue-50 hover:shadow-lg
               `}>
                 <input {...getInputProps()} />
-                <IoCloudUploadOutline className="w-10 h-10 transition-colors duration-300 group-hover:text-blue-500" />
-                <p className="mt-2 transition-colors duration-300 group-hover:text-blue-500">
-                  Drag or click your Image here!
-                </p>
+                <Image src="/click.svg" alt="Upload" width={120} height={120} />
+                <p className="mt-2 font-bold">Drag or click your Image here!</p>
               </div>
             ) : (
               <div>
@@ -346,7 +356,7 @@ function PicContent() {
           </div>
         )}
       </div>
-      <div className="w-full md:w-[300px]">
+      {/* <div className="w-full md:w-[300px]">
         <div className="static md:fixed md:w-[300px] bg-transparent z-20 rounded-lg shadow-lg border border-gray-200 p-6 transition-shadow duration-300 ease-in-out hover:shadow-xl">
           <Panel
             textSize={textSize}
@@ -359,8 +369,9 @@ function PicContent() {
             imageSrc={imageSrc}
             noExif={noExif}
           />
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
+      {/* <ColorPop onSelectColor={(color) => setBackgroundColor(color)} /> */}
     </div>
   );
 }

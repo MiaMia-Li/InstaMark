@@ -5,6 +5,7 @@ import {
   RiWeiboFill,
   RiGithubFill,
 } from "react-icons/ri";
+import { SiBuymeacoffee } from "react-icons/si";
 
 export const CAMERA_BRAND = [
   { key: "Canon", src: "/camera/Canon.svg" },
@@ -82,4 +83,15 @@ export const SOCIAL_MEDIA = [
     description: "Follow me on Github",
     svg: RiGithubFill,
   },
+  {
+    id: "buymeacoffee",
+    icon: "media/buymeacoffee.svg",
+    href: "https://www.buymeacoffee.com/sept.miamia",
+    description: "Buy me a coffee",
+    svg: SiBuymeacoffee,
+  },
 ];
+
+export const getSocialMedia = (ids: string[]) => {
+  return SOCIAL_MEDIA.filter((media) => ids.includes(media.id));
+};

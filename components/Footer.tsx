@@ -1,24 +1,32 @@
-import { SOCIAL_MEDIA } from "@/lib/config";
+"use client";
+
+import { useContext } from "react";
+import { ColorProvider, useColor } from "@/context/ColorContext";
+
+function Foo() {
+  const { color, setColor } = useColor();
+
+  return (
+    <div
+      className="flex justify-center py-2 transition-colors duration-300 ease-in-out"
+      style={{ color }}>
+      <p className="text-sm text-gray-700">
+        © {new Date().getFullYear()} Ahaapple. All rights reserved. created by{" "}
+        ❤️{" "}
+        <a
+          target="_blank"
+          href="https://www.linkedin.com/in/mengyao-li-software/">
+          MiaMia
+        </a>
+      </p>
+    </div>
+  );
+}
 
 export default function Footer() {
   return (
-    <div className="flex justify-center">
-      <ul className="flex gap-x-6">
-        {SOCIAL_MEDIA.map((item, index) => {
-          const Com = item.svg;
-          return (
-            <li key={`${item}-${index}`}>
-              <a
-                href={item.href}
-                className="block p-2 rounded-full transition-colors duration-300 ease-in-out"
-                target="_blank"
-                rel="noopener noreferrer">
-                <Com className="w-5 h-5 sm:w-6 sm:h-6 text-slate-600 hover:text-blue-600 transition-colors duration-300 ease-in-out" />
-              </a>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+    <ColorProvider>
+      <Foo />
+    </ColorProvider>
   );
 }
