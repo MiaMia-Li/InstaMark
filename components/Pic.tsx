@@ -222,7 +222,7 @@ function PicContent() {
           ctx.clip();
 
           const gradient = ctx.createLinearGradient(0, 0, width * 2, 0);
-          const cssGradient = tailwindToCSS(backgroundColor);
+          const cssGradient = backgroundColor;
           if (cssGradient.startsWith("linear-gradient")) {
             const colors = cssGradient.match(/rgba?\([\d\s,\.]+\)|#[a-f\d]+/gi);
             if (colors) {
@@ -273,9 +273,9 @@ function PicContent() {
   }, []);
 
   return (
-    <div className="flex w-full flex-col items-center sm:px-10">
-      <div className="w-full max-w-4xl">
-        <div className="text-center my-8">
+    <div className="flex flex-col h-full w-full gap-10 px-4 md:px-10 md:flex-row">
+      <div className="flex-1">
+        <div className="text-center my-4 md:my-8">
           <h1 className="text-3xl font-bold mb-4 text-indigo-600">
             Upload, Beautify, and Personalize Your Picture
           </h1>
@@ -286,12 +286,12 @@ function PicContent() {
           </p>
         </div>
         <div
-          className={`${backgroundColor} shadow-md rounded p-4 duration-200 transform-gpu transition-all ease-linear w-full`}
+          className={`shadow-md rounded p-4 duration-200 transform-gpu transition-all ease-linear w-full`}
           ref={exportRef}
           style={{
             padding: padding,
             borderRadius: borderRadius,
-            backgroundColor: backgroundColor,
+            background: backgroundColor,
           }}>
           <div className="w-full">
             {!imageSrc ? (
@@ -356,8 +356,8 @@ function PicContent() {
           </div>
         )}
       </div>
-      {/* <div className="w-full md:w-[300px]">
-        <div className="static md:fixed md:w-[300px] bg-transparent z-20 rounded-lg shadow-lg border border-gray-200 p-6 transition-shadow duration-300 ease-in-out hover:shadow-xl">
+      <div className="mt-2 w-full md:w-1/3 h-full flex-shrink-0">
+        <div className="rounded-md shadow-sm p-4 md:sticky md:top-0">
           <Panel
             textSize={textSize}
             textColor={textColor}
@@ -369,9 +369,8 @@ function PicContent() {
             imageSrc={imageSrc}
             noExif={noExif}
           />
-        </div> */}
-      {/* </div> */}
-      {/* <ColorPop onSelectColor={(color) => setBackgroundColor(color)} /> */}
+        </div>
+      </div>
     </div>
   );
 }
