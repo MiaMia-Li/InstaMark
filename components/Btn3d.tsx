@@ -14,7 +14,7 @@ const Btn3d: React.FC<Btn3dProps> = ({
 }) => {
   return (
     <button
-      className={`relative text-lg w-full ${
+      className={`relative text-lg w-full text-primary ${
         loading ? "cursor-not-allowed opacity-70" : ""
       }`}
       onClick={handleClick}

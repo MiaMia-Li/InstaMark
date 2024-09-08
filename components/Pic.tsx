@@ -15,12 +15,12 @@ import Exif from "exif-js";
 import { CAMERA_BRAND, COLOR_MAP } from "@/lib/config";
 import { tailwindToCSS, isEmptyObj } from "@/lib/color";
 import html2canvas from "html2canvas";
-import { useDropzone } from "react-dropzone";
+import { useDropzone, FileRejection, DropEvent } from "react-dropzone";
 import Btn3d from "./Btn3d";
 import InputRange from "./InputRange";
 import Panel from "./Panel";
-import FloatPanel from "./FloatPanel";
 import ColorPop from "./ColorPop";
+import Confetti from "./Confetti";
 
 function PicContent() {
   const { color, setColor } = useColor();
@@ -35,11 +35,12 @@ function PicContent() {
   const [isExporting, setIsExporting] = useState(false);
   const [noExif, setNoExif] = useState(false);
   const [showPanel, setShowPanel] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const exportRef = useRef<HTMLDivElement>(null);
 
   const handleFile = useCallback((file: File) => {
-    if (file) {
+    if (file && file.type.startsWith("image/")) {
       const reader = new FileReader();
       reader.onload = (event: ProgressEvent<FileReader>) => {
         if (event.target && event.target.result) {
@@ -48,17 +49,29 @@ function PicContent() {
         }
       };
       reader.readAsDataURL(file);
+    } else {
+      alert("Please upload a valid image file");
     }
   }, []);
 
   const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      handleFile(acceptedFiles[0]);
+    (acceptedFiles: any, rejectedFiles: any) => {
+      if (rejectedFiles.length > 0) {
+        alert("Please upload a valid image file");
+      } else if (acceptedFiles.length > 0) {
+        handleFile(acceptedFiles[0]);
+      }
     },
     [handleFile]
   );
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      "image/*": [],
+    },
+    maxFiles: 1,
+  });
   const handleReupload = () => {
     fileInputRef.current?.click();
   };
@@ -250,6 +263,8 @@ function PicContent() {
         link.click();
       } finally {
         // 清理临时元素
+        setShowConfetti(true);
+        setTimeout(() => setShowConfetti(false), 5000); // 3秒后隐藏彩带效果
         document.body.removeChild(wrapper);
         setIsExporting(false);
       }
@@ -274,6 +289,7 @@ function PicContent() {
 
   return (
     <div className="flex flex-col h-full w-full gap-10 px-4 md:px-10 md:flex-row">
+      {showConfetti && <Confetti />}
       <div className="flex-1">
         <div className="text-center my-4 md:my-8">
           <h1 className="text-3xl font-bold mb-4 text-indigo-600">
@@ -356,7 +372,7 @@ function PicContent() {
           </div>
         )}
       </div>
-      <div className="mt-2 w-full md:w-1/3 h-full flex-shrink-0">
+      <div className="mt-2 w-full md:w-1/4 min-w-[300px] h-full flex-shrink-0">
         <div className="rounded-md shadow-sm p-4 md:sticky md:top-0">
           <Panel
             textSize={textSize}

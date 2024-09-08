@@ -85,11 +85,11 @@ export default function ColorPicker({ onSelectColor }: ColorPickerProps) {
   return (
     <div>
       <h3 className="text-sm font-semibold mb-2">Gradients</h3>
-      <div className="grid grid-cols-8 gap-2 mb-4">
+      <div className="flex flex-wrap gap-3 mb-4">
         {gradientColors.map((color, index) => (
           <div
             key={index}
-            className={`w-10 h-10 rounded-full cursor-pointer relative transition-all duration-300 ease-in-out`}
+            className={`w-10 h-10 rounded-full cursor-pointer relative transition-all duration-300 ease-in-out flex-shrink-0`}
             style={{ background: color }}
             onClick={() => handleColorSelect(color)}>
             {selectedColor === color && (
@@ -101,11 +101,11 @@ export default function ColorPicker({ onSelectColor }: ColorPickerProps) {
         ))}
       </div>
       <h3 className="text-sm font-semibold mb-2">Solid color</h3>
-      <div className="grid grid-cols-8 gap-2">
+      <div className="flex flex-wrap gap-2 mb-4">
         {solidColors.map((color, index) => (
           <div
             key={index}
-            className={`w-10 h-10 rounded-full cursor-pointer relative transition-all duration-300 ease-in-out`}
+            className={`w-10 h-10 rounded-full cursor-pointer relative transition-all duration-300 ease-in-out flex-shrink-0`}
             style={{ background: color }}
             onClick={() => handleColorSelect(color)}>
             {selectedColor === color && (

@@ -99,8 +99,9 @@ export default function About() {
         <div className="mt-10">
           <h2 className="text-2xl font-bold text-gray-900">Contact Us</h2>
           <p className="mt-4 text-base text-gray-700">
-            We'd love to hear from you! If you have any questions, suggestions,
-            or just want to say hello, please feel free to reach out to us at:
+            We&apos;d love to hear from you! If you have any questions,
+            suggestions, or just want to say hello, please feel free to reach
+            out to us at:
           </p>
           <a
             href="mailto:contact@phototailor.com"
