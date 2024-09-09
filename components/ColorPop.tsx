@@ -84,7 +84,7 @@ export default function ColorPicker({ onSelectColor }: ColorPickerProps) {
 
   return (
     <div>
-      <h3 className="text-sm font-semibold mb-2">Gradients</h3>
+      <p className="text-sm font-semibold mb-2">Gradients</p>
       <div className="flex flex-wrap gap-2 mb-4">
         {gradientColors.map((color, index) => (
           <div
@@ -100,7 +100,7 @@ export default function ColorPicker({ onSelectColor }: ColorPickerProps) {
           </div>
         ))}
       </div>
-      <h3 className="text-sm font-semibold mb-2">Solid color</h3>
+      <p className="text-sm font-semibold mb-2">Solid color</p>
       <div className="flex flex-wrap gap-2 mb-4">
         {solidColors.map((color, index) => (
           <div
@@ -118,10 +118,14 @@ export default function ColorPicker({ onSelectColor }: ColorPickerProps) {
       </div>
 
       <div className="mt-4">
-        <h3 className="text-sm font-semibold mb-2">Customer</h3>
+        <p className="text-sm font-semibold mb-2">Customer</p>
         <div className="flex items-center">
           <div className="relative">
+            <label htmlFor="custom-color" className="sr-only">
+              Select Custom Color
+            </label>
             <input
+              id="custom-color"
               type="color"
               value={selectedColor}
               onChange={handleCustomColorChange}
@@ -133,6 +137,7 @@ export default function ColorPicker({ onSelectColor }: ColorPickerProps) {
               </div>
             )}
           </div>
+          <span className="ml-2 text-sm">{selectedColor}</span>
         </div>
       </div>
     </div>

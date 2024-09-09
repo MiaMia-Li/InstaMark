@@ -17,7 +17,11 @@ export default function Header() {
       </a>
       <div className="flex items-center space-x-4">
         {getSocialMedia(["buymeacoffee", "github"]).map((media) => (
-          <a href={media.href} key={media.id} target="_blank">
+          <a
+            href={media.href}
+            key={media.id}
+            target="_blank"
+            aria-label={media.description}>
             <media.svg className="w-6 h-6" />
           </a>
         ))}

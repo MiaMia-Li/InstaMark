@@ -52,8 +52,8 @@ export default function Panel(props: PanelProps) {
         <button
           className={`flex-1 inline-flex items-center justify-center gap-2 py-2 px-4 text-sm font-medium rounded-xl ${
             activeTab === "palette"
-              ? "bg-indigo-500 text-white"
-              : "bg-gray-100 text-gray-700"
+              ? "bg-indigo-600 text-white"
+              : "bg-gray-200 text-gray-800 hover:bg-gray-300"
           }`}
           onClick={() => setActiveTab("palette")}>
           <IoIosColorPalette className="w-4 h-4" />
@@ -62,8 +62,8 @@ export default function Panel(props: PanelProps) {
         <button
           className={`flex-1 inline-flex items-center justify-center gap-2 py-2 px-4 text-sm font-medium rounded-xl ${
             activeTab === "custom"
-              ? "bg-indigo-500 text-white"
-              : "bg-gray-100 text-gray-700"
+              ? "bg-indigo-600 text-white"
+              : "bg-gray-200 text-gray-800 hover:bg-gray-300"
           }`}
           onClick={() => setActiveTab("custom")}>
           <FiLayout className="w-4 h-4" />
