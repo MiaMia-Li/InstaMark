@@ -2,7 +2,7 @@ import Image from "next/image";
 import { getSocialMedia } from "@/lib/config";
 export default function Header() {
   return (
-    <header className="flex justify-between text-center py-4 px-4 md:px-10">
+    <nav className="flex justify-between text-center py-4 px-4 md:px-10">
       <a href="/" className="flex items-center space-x-4">
         <div className="flex-shrink-0">
           <Image
@@ -13,7 +13,7 @@ export default function Header() {
             className="object-contain"
           />
         </div>
-        <h1 className="text-3xl font-bold">Photo Tailor</h1>
+        <div className="text-3xl font-bold">Photo Tailor</div>
       </a>
       <div className="flex items-center space-x-4">
         {getSocialMedia(["buymeacoffee", "github"]).map((media) => (
@@ -27,6 +27,6 @@ export default function Header() {
         ))}
         <a href="/about">About</a>
       </div>
-    </header>
+    </nav>
   );
 }
