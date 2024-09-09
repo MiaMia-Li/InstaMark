@@ -36,6 +36,7 @@ function PicContent() {
   const [noExif, setNoExif] = useState(false);
   const [showPanel, setShowPanel] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [exportRatio, setExportRatio] = useState("auto");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const exportRef = useRef<HTMLDivElement>(null);
 
@@ -132,6 +133,11 @@ function PicContent() {
         )}°${Math.floor(minutes)}′${seconds.toFixed(0)}″${ref}`;
       }
 
+      const focalLength = Exif.getTag(this, "FocalLength");
+      const focalLen = focalLength
+        ? focalLength.numerator / focalLength.denominator
+        : "";
+
       const exifInfo = {
         make: Exif.getTag(this, "Make"),
         date,
@@ -141,7 +147,7 @@ function PicContent() {
         shutterSpeed: Exif.getTag(this, "ExposureTime")
           ? `1/${Math.round(1 / Exif.getTag(this, "ExposureTime"))}`
           : null,
-        focalLength: Exif.getTag(this, "FocalLength"),
+        focalLen,
         latitude,
         longitude,
       };
@@ -169,7 +175,7 @@ function PicContent() {
       wrapper.style.left = "-9999px";
       try {
         await document.fonts.ready;
-        const scale = 4;
+        const scale = 2;
         const canvas = await html2canvas(wrapper, {
           width: width,
           height: height,
@@ -259,7 +265,7 @@ function PicContent() {
         const image = finalCanvas.toDataURL("image/png");
         const link = document.createElement("a");
         link.href = image;
-        link.download = "image-with-exif.png";
+        link.download = new Date().toISOString().replace(/:/g, "-") + ".png";
         link.click();
       } finally {
         // 清理临时元素
@@ -280,6 +286,7 @@ function PicContent() {
       setExifData,
       setShowCameraInfo,
       setTextSize,
+      setExportRatio,
     };
 
     if (method in methodMap) {
@@ -302,9 +309,11 @@ function PicContent() {
           </p>
         </div>
         <div
-          className={`shadow-md rounded p-4 duration-200 transform-gpu transition-all ease-linear w-full`}
+          className={`shadow-md rounded p-4 duration-200 transform-gpu transition-all ease-linear w-full overflow-hidden`}
           ref={exportRef}
           style={{
+            aspectRatio:
+              exportRatio === "auto" ? "auto" : exportRatio.replace(":", "/"),
             padding: padding,
             borderRadius: borderRadius,
             background: backgroundColor,
@@ -384,6 +393,7 @@ function PicContent() {
             onChange={handleChange}
             imageSrc={imageSrc}
             noExif={noExif}
+            exportRatio={exportRatio}
           />
         </div>
       </div>

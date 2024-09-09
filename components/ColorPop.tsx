@@ -85,7 +85,7 @@ export default function ColorPicker({ onSelectColor }: ColorPickerProps) {
   return (
     <div>
       <h3 className="text-sm font-semibold mb-2">Gradients</h3>
-      <div className="flex flex-wrap gap-3 mb-4">
+      <div className="flex flex-wrap gap-2 mb-4">
         {gradientColors.map((color, index) => (
           <div
             key={index}

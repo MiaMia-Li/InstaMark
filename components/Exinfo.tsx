@@ -14,6 +14,7 @@ interface ExinfoProps {
     aperture?: string;
     latitude?: string;
     longitude?: string;
+    focalLen?: string;
   };
   type?: string;
   bgColor?: string;
@@ -30,9 +31,11 @@ export default function Exinfo(props: ExinfoProps) {
     shutterSpeed,
     iso,
     aperture,
+    focalLen,
     latitude = "",
     longitude = "",
   } = data;
+  console.log("--data", data);
 
   const textColors = useMemo(() => {
     return getTextColors(textColor || ""); // 提供默认值
@@ -53,45 +56,51 @@ export default function Exinfo(props: ExinfoProps) {
 
   return (
     <div
-      className={`flex items-center justify-between ${textSizeClass} transition-all duration-300 ease-in-out`}
+      className={`flex items-center justify-between overflow-hidden ${textSizeClass} transition-all duration-300 ease-in-out`}
       style={{ color: textColors.desc }}>
-      {model && (
-        <div>
-          <p className="font-bold mb-1" style={{ color: textColors.main }}>
+      <div>
+        {model && (
+          <p
+            className="font-bold mb-1 text-nowrap"
+            style={{ color: textColors.main }}>
             {model}
           </p>
-
-          <p
-            className="text-nowrap flex gap-[5px]"
-            style={{ color: textColors.desc }}>
-            {iso && <span>ISO{iso}</span>}
-            {aperture && <span>F{aperture} </span>}
-            {shutterSpeed && <span>{shutterSpeed}s</span>}
+        )}
+        {data && (
+          <p className="text-nowrap" style={{ color: textColors.desc }}>
+            {date}
           </p>
-        </div>
-      )}
+        )}
+      </div>
+
       {cameraSrc && (
         <Image
           src={cameraSrc}
           alt=""
+          // layout="responsive"
           width={0}
           height={0}
-          className={`object-contain w-auto ${
-            textSize === "sm"
-              ? "h-[25px]"
-              : textSize === "md"
-              ? "h-[35px]"
-              : "h-[45px]"
-          }`}
+          objectFit="contain"
+          className={`object-contain w-1/3`}
         />
       )}
+
       <div>
+        {iso && (
+          <p
+            className="font-bold mb-1 flex gap-[5px] text-nowrap"
+            style={{ color: textColors.main }}>
+            {focalLen && <span>{focalLen}mm</span>}
+            {iso && <span>ISO{iso}</span>}
+            {aperture && <span>F{aperture} </span>}
+            {shutterSpeed && <span>{shutterSpeed}s</span>}
+          </p>
+        )}
         {latitude && longitude && (
           <p className="flex items-center gap-[2px]">
             {`${latitude} ${longitude}`}
           </p>
         )}
-        {date && <p className="flex items-center gap-[2px]">{date}</p>}
       </div>
     </div>
   );

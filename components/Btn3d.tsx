@@ -34,7 +34,6 @@ const Btn3d: React.FC<Btn3dProps> = ({
         {loading ? (
           <>
             <AiOutlineLoading3Quarters className="inline-block animate-spin text-2xl mr-2" />
-            Wokring...
           </>
         ) : (
           text

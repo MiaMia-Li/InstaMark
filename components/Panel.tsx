@@ -28,6 +28,7 @@ interface PanelProps {
   showCameraInfo: boolean;
   imageSrc: string | null;
   noExif?: boolean;
+  exportRatio?: string;
 }
 
 export default function Panel(props: PanelProps) {
@@ -41,6 +42,7 @@ export default function Panel(props: PanelProps) {
     imageSrc,
     noExif,
     textSize,
+    exportRatio,
   } = props;
   const [activeTab, setActiveTab] = useState<"palette" | "custom">("palette");
   console.log("-exifData", exifData);
@@ -74,6 +76,36 @@ export default function Panel(props: PanelProps) {
         />
       ) : (
         <div className="flex flex-col space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Picture Ratio
+            </label>
+            <div className="flex flex-wrap gap-4">
+              {[
+                { ratio: "auto" },
+                { ratio: "1:1", width: 40, height: 40 },
+                { ratio: "4:3", width: 40, height: 30 },
+                { ratio: "3:4", width: 30, height: 40 },
+                { ratio: "16:9", width: 48, height: 27 },
+              ].map((option) => (
+                <button
+                  key={option.ratio}
+                  className={`flex flex-col items-center p-2 border rounded-md transition-all ${
+                    exportRatio === option.ratio
+                      ? "border-blue-500 bg-blue-50"
+                      : "border-gray-300 hover:border-blue-300"
+                  }`}
+                  style={{
+                    width: `${option.width}px`,
+                    height: `${option.height}px`,
+                  }}
+                  onClick={() => onChange("setExportRatio", option.ratio)}>
+                  <span className="text-xs">{option.ratio}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
           <label className="text-gray-700 text-sm">Padding</label>
           <div>
             <InputRange
@@ -114,24 +146,68 @@ export default function Panel(props: PanelProps) {
 
           <div className="flex items-center justify-between">
             <label className="text-gray-700 text-sm">Text Color</label>
-            <select
-              value={textColor}
-              onChange={(e) => onChange("setTextColor", e.target.value)}
-              className="w-2/3 px-4 py-2 rounded bg-transparent text-gray-800 focus:outline-none">
-              <option value="dark">Dark</option>
-              <option value="light">Light</option>
-            </select>
+            <div className="flex justify-end w-2/3">
+              <label className="inline-flex items-center mr-4">
+                <input
+                  type="radio"
+                  className="form-radio text-blue-600"
+                  name="textColor"
+                  value="dark"
+                  checked={textColor === "dark"}
+                  onChange={(e) => onChange("setTextColor", e.target.value)}
+                />
+                <span className="ml-2 text-sm text-gray-700">Dark</span>
+              </label>
+              <label className="inline-flex items-center">
+                <input
+                  type="radio"
+                  className="form-radio text-blue-600"
+                  name="textColor"
+                  value="light"
+                  checked={textColor === "light"}
+                  onChange={(e) => onChange("setTextColor", e.target.value)}
+                />
+                <span className="ml-2 text-sm text-gray-700">Light</span>
+              </label>
+            </div>
           </div>
           <div className="flex items-center justify-between">
             <label className="text-gray-700 text-sm">Text Size</label>
-            <select
-              value={textSize}
-              onChange={(e) => onChange("setTextSize", e.target.value)}
-              className="w-2/3 px-4 py-2 rounded bg-transparent text-gray-800 focus:outline-none">
-              <option value="sm">Small</option>
-              <option value="md">Medium</option>
-              <option value="lg">Large</option>
-            </select>
+            <div className="flex justify-end w-2/3">
+              <label className="inline-flex items-center mr-4">
+                <input
+                  type="radio"
+                  className="form-radio text-blue-600"
+                  name="textSize"
+                  value="sm"
+                  checked={textSize === "sm"}
+                  onChange={(e) => onChange("setTextSize", e.target.value)}
+                />
+                <span className="ml-2 text-sm text-gray-700">Small</span>
+              </label>
+              <label className="inline-flex items-center mr-4">
+                <input
+                  type="radio"
+                  className="form-radio text-blue-600"
+                  name="textSize"
+                  value="md"
+                  checked={textSize === "md"}
+                  onChange={(e) => onChange("setTextSize", e.target.value)}
+                />
+                <span className="ml-2 text-sm text-gray-700">Medium</span>
+              </label>
+              <label className="inline-flex items-center">
+                <input
+                  type="radio"
+                  className="form-radio text-blue-600"
+                  name="textSize"
+                  value="lg"
+                  checked={textSize === "lg"}
+                  onChange={(e) => onChange("setTextSize", e.target.value)}
+                />
+                <span className="ml-2 text-sm text-gray-700">Large</span>
+              </label>
+            </div>
           </div>
 
           <div className="flex items-center justify-between">
@@ -173,6 +249,7 @@ export default function Panel(props: PanelProps) {
                   bg-white border-gray-300 hover:border-blue-500 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
             />
           </div>
+          {/* <Divider /> */}
         </div>
       )}
     </div>
