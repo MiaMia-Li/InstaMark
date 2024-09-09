@@ -30,7 +30,7 @@ function PicContent() {
   const [borderRadius, setBorderRadius] = useState(10);
   const [backgroundColor, setBackgroundColor] = useState("#fff");
   const [textColor, setTextColor] = useState("dark");
-  const [textSize, setTextSize] = useState("md");
+  const [textSize, setTextSize] = useState("lg");
   const [showCameraInfo, setShowCameraInfo] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
   const [noExif, setNoExif] = useState(false);
@@ -175,7 +175,7 @@ function PicContent() {
       wrapper.style.left = "-9999px";
       try {
         await document.fonts.ready;
-        const scale = 2;
+        const scale = 3;
         const canvas = await html2canvas(wrapper, {
           width: width,
           height: height,
@@ -312,8 +312,6 @@ function PicContent() {
           className={`shadow-md rounded p-4 duration-200 transform-gpu transition-all ease-linear w-full overflow-hidden`}
           ref={exportRef}
           style={{
-            aspectRatio:
-              exportRatio === "auto" ? "auto" : exportRatio.replace(":", "/"),
             padding: padding,
             borderRadius: borderRadius,
             background: backgroundColor,
@@ -336,6 +334,12 @@ function PicContent() {
             ) : (
               <div>
                 <Image
+                  style={{
+                    aspectRatio:
+                      exportRatio === "auto"
+                        ? "auto"
+                        : exportRatio.replace(":", "/"),
+                  }}
                   src={imageSrc}
                   alt="Uploaded"
                   width={500}
@@ -347,7 +351,7 @@ function PicContent() {
             )}
 
             {showCameraInfo && (
-              <div className="text-left pt-4">
+              <div className="pt-4">
                 <Exinfo
                   bgColor={backgroundColor}
                   textColor={textColor}

@@ -35,7 +35,6 @@ export default function Exinfo(props: ExinfoProps) {
     latitude = "",
     longitude = "",
   } = data;
-  console.log("--data", data);
 
   const textColors = useMemo(() => {
     return getTextColors(textColor || ""); // 提供默认值
@@ -51,12 +50,12 @@ export default function Exinfo(props: ExinfoProps) {
   }, [make]);
 
   const textSizeClass = useMemo(() => {
-    return textSize ? `text-${textSize}` : "text-sm";
+    return textSize ? `text-${textSize}` : "text-md";
   }, [textSize]);
 
   return (
     <div
-      className={`flex items-center justify-between overflow-hidden ${textSizeClass} transition-all duration-300 ease-in-out`}
+      className={`flex items-center justify-between ${textSizeClass} transition-all duration-300 ease-in-out`}
       style={{ color: textColors.desc }}>
       <div>
         {model && (
@@ -81,7 +80,7 @@ export default function Exinfo(props: ExinfoProps) {
           width={0}
           height={0}
           objectFit="contain"
-          className={`object-contain w-1/3`}
+          className={`object-contain max-w-1/3 w-auto max-h-[35px]`}
         />
       )}
 

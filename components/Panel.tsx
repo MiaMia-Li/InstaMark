@@ -179,8 +179,8 @@ export default function Panel(props: PanelProps) {
                   type="radio"
                   className="form-radio text-blue-600"
                   name="textSize"
-                  value="sm"
-                  checked={textSize === "sm"}
+                  value="md"
+                  checked={textSize === "md"}
                   onChange={(e) => onChange("setTextSize", e.target.value)}
                 />
                 <span className="ml-2 text-sm text-gray-700">Small</span>
@@ -190,8 +190,8 @@ export default function Panel(props: PanelProps) {
                   type="radio"
                   className="form-radio text-blue-600"
                   name="textSize"
-                  value="md"
-                  checked={textSize === "md"}
+                  value="lg"
+                  checked={textSize === "lg"}
                   onChange={(e) => onChange("setTextSize", e.target.value)}
                 />
                 <span className="ml-2 text-sm text-gray-700">Medium</span>
@@ -201,8 +201,8 @@ export default function Panel(props: PanelProps) {
                   type="radio"
                   className="form-radio text-blue-600"
                   name="textSize"
-                  value="lg"
-                  checked={textSize === "lg"}
+                  value="xl"
+                  checked={textSize === "xl"}
                   onChange={(e) => onChange("setTextSize", e.target.value)}
                 />
                 <span className="ml-2 text-sm text-gray-700">Large</span>
@@ -237,6 +237,7 @@ export default function Panel(props: PanelProps) {
             </label>
             <input
               type="date"
+              lang="en-US"
               id="dateInput"
               value={exifData?.date}
               onChange={(e) =>
@@ -245,8 +246,7 @@ export default function Panel(props: PanelProps) {
                   date: e.target.value,
                 })
               }
-              className="w-2/3 px-4 py-2 rounded bg-transparent text-gray-800 transition duration-150 ease-in-out
-                  bg-white border-gray-300 hover:border-blue-500 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+              className="w-2/3 px-4 py-2 rounded bg-transparent text-gray-800"
             />
           </div>
           {/* <Divider /> */}

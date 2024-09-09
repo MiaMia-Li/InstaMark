@@ -104,9 +104,9 @@ export default function About() {
             out to us at:
           </p>
           <a
-            href="mailto:contact@phototailor.com"
+            href="mailto:superlmy.913@gmail.com"
             className="mt-2 inline-block text-blue-600 hover:text-blue-800">
-            contact@phototailor.com
+            superlmy.913@gmail.com
           </a>
         </div>
       </div>
