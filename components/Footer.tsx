@@ -11,8 +11,7 @@ function Foo() {
       className="flex justify-center py-2 transition-colors duration-300 ease-in-out"
       style={{ color }}>
       <p className="text-sm text-gray-700">
-        © {new Date().getFullYear()} Ahaapple. All rights reserved. created by{" "}
-        ❤️{" "}
+        © {new Date().getFullYear()} All rights reserved. created by ❤️{" "}
         <a
           target="_blank"
           href="https://www.linkedin.com/in/mengyao-li-software/">
