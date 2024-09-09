@@ -3,6 +3,7 @@ import { Comic_Neue } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import { Analytics } from "@vercel/analytics/react";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const comic = Comic_Neue({
   weight: ["300", "400", "700"],
@@ -70,6 +71,7 @@ export default function RootLayout({
         </div>
         <Analytics />
       </body>
+      <GoogleAnalytics gaId="G-G2K2QMBJJG" />
     </html>
   );
 }
