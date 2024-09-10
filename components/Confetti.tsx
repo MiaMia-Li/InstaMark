@@ -53,7 +53,7 @@ const Confetti: React.FC<ConfettiProps> = ({ count = 100 }) => {
 
     const timer = setTimeout(() => {
       setConfetti([]);
-    }, 5000);
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, [count]);

@@ -5,6 +5,7 @@ import Exinfo from "./Exinfo";
 import Image from "next/image";
 import React, {
   useState,
+  useEffect,
   useRef,
   useCallback,
   ChangeEvent,
@@ -20,7 +21,9 @@ import Btn3d from "./Btn3d";
 import InputRange from "./InputRange";
 import Panel from "./Panel";
 import ColorPop from "./ColorPop";
+import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "./Confetti";
+import ShareDialog from "./ShareDialog";
 
 function PicContent() {
   const { color, setColor } = useColor();
@@ -34,11 +37,21 @@ function PicContent() {
   const [showCameraInfo, setShowCameraInfo] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
   const [noExif, setNoExif] = useState(false);
-  const [showPanel, setShowPanel] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [showShareDialog, setShowShareDialog] = useState(false);
   const [exportRatio, setExportRatio] = useState("auto");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const exportRef = useRef<HTMLDivElement>(null);
+  const [exportedImageUrl, setExportedImageUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (showConfetti) {
+      setTimeout(() => {
+        setShowConfetti(false);
+        setShowShareDialog(true);
+      }, 3000); // 5秒后显示分享对话框
+    }
+  }, [showConfetti]);
 
   const handleFile = useCallback((file: File) => {
     if (file && file.type.startsWith("image/")) {
@@ -264,6 +277,7 @@ function PicContent() {
 
         // 导出图片
         const image = finalCanvas.toDataURL("image/png");
+        setExportedImageUrl(image);
         const link = document.createElement("a");
         link.href = image;
         link.download = new Date().toISOString().replace(/:/g, "-") + ".png";
@@ -302,7 +316,33 @@ function PicContent() {
 
   return (
     <div className="flex flex-col h-full w-full gap-10 px-4 md:px-10 md:flex-row">
-      {showConfetti && <Confetti />}
+      <div className="relative">
+        <AnimatePresence>
+          {showConfetti && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}>
+              <Confetti />
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <motion.div
+          animate={{ filter: showConfetti ? "blur(5px)" : "blur(0px)" }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col h-full w-full gap-10 px-4 md:px-10 md:flex-row">
+          {/* ... 其他 JSX 保持不变 */}
+        </motion.div>
+        <AnimatePresence>
+          {showShareDialog && (
+            <ShareDialog
+              imageUrl={exportedImageUrl}
+              onClose={() => setShowShareDialog(false)}
+            />
+          )}
+        </AnimatePresence>
+      </div>
       <div className="flex-1">
         <div className="text-center my-4 md:my-8">
           <h1 className="text-3xl font-bold mb-4 text-indigo-600">
