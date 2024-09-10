@@ -90,6 +90,7 @@ function PicContent() {
       const reader = new FileReader();
       reader.onload = (event: ProgressEvent<FileReader>) => {
         if (event.target && event.target.result) {
+          gtag("event", "upload-photo")
           setImageSrc(event.target.result as string);
           loadExifData(file);
         }
@@ -273,7 +274,7 @@ function PicContent() {
         setTimeout(() => setShowConfetti(false), 5000); // 3秒后隐藏彩带效果
         document.body.removeChild(wrapper);
         setIsExporting(false);
-      }
+        gtag("event", "download-photo")
     }
   };
 
@@ -291,6 +292,10 @@ function PicContent() {
 
     if (method in methodMap) {
       (methodMap as any)[method](value);
+      gtag("event", "setting-photo", {
+        method,
+        value,
+      });
     }
   }, []);
 
