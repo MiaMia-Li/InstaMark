@@ -176,20 +176,30 @@ function PicContent() {
       const element = exportRef.current;
       const { width, height } = element.getBoundingClientRect();
 
-      // 创建一个临时的包装器div
+      // Adjust the scale for mobile (iPhone) devices
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      const scale = isMobile ? 2 : 3;
+
+      // Create a temporary wrapper div
       const wrapper = document.createElement("div");
       wrapper.style.width = `${width}px`;
       wrapper.style.height = `${height}px`;
       wrapper.style.overflow = "hidden";
       wrapper.appendChild(element.cloneNode(true));
 
-      // 将包装器添加到body中，但设置为不可见
+      // Hide the wrapper and append it to the body
       document.body.appendChild(wrapper);
       wrapper.style.position = "absolute";
       wrapper.style.left = "-9999px";
+
       try {
         await document.fonts.ready;
-        const scale = 3;
+
+        // Ensure a delay for iOS to handle font rendering properly
+        if (isMobile) {
+          await new Promise((resolve) => setTimeout(resolve, 100)); // small delay for iOS rendering
+        }
+
         const canvas = await html2canvas(wrapper, {
           width: width,
           height: height,
@@ -209,19 +219,20 @@ function PicContent() {
                 // @ts-ignore
                 clonedElement.style[key] = styles[key];
               });
-              // 确保圆角效果被应用
+              // Ensure borderRadius is applied
               clonedElement.style.borderRadius = `${borderRadius}px`;
             }
           },
         });
 
-        // 创建一个新的canvas来绘制背景和内容
+        // Create a final canvas to draw background and content
         const finalCanvas = document.createElement("canvas");
         finalCanvas.width = width * scale;
         finalCanvas.height = height * scale;
         const ctx = finalCanvas.getContext("2d");
+
         if (ctx) {
-          // 绘制背景
+          // Draw background
           ctx.save();
           ctx.beginPath();
           ctx.moveTo(borderRadius * scale, 0);
@@ -270,12 +281,12 @@ function PicContent() {
           ctx.fillStyle = gradient;
           ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
 
-          // 绘制内容
+          // Draw content
           ctx.drawImage(canvas, 0, 0);
           ctx.restore();
         }
 
-        // 导出图片
+        // Export image
         const image = finalCanvas.toDataURL("image/png");
         setExportedImageUrl(image);
         const link = document.createElement("a");
@@ -283,9 +294,9 @@ function PicContent() {
         link.download = new Date().toISOString().replace(/:/g, "-") + ".png";
         link.click();
       } finally {
-        // 清理临时元素
+        // Clean up temporary elements
         setShowConfetti(true);
-        setTimeout(() => setShowConfetti(false), 5000); // 3秒后隐藏彩带效果
+        setTimeout(() => setShowConfetti(false), 3000); // 5 seconds for confetti effect
         document.body.removeChild(wrapper);
         setIsExporting(false);
         gtag("event", "download_photo");

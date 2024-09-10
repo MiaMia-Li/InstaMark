@@ -55,9 +55,9 @@ export default function Exinfo(props: ExinfoProps) {
 
   return (
     <div
-      className={`flex items-center justify-between ${textSizeClass} transition-all duration-300 ease-in-out`}
+      className={`flex items-center justify-between overflow-hidden ${textSizeClass} transition-all duration-300 ease-in-out`}
       style={{ color: textColors.desc }}>
-      <div>
+      <div className="flex-shrink-0">
         {model && (
           <p
             className="font-bold mb-1 text-nowrap"
@@ -73,21 +73,22 @@ export default function Exinfo(props: ExinfoProps) {
       </div>
 
       {cameraSrc && (
-        <Image
-          src={cameraSrc}
-          alt=""
-          // layout="responsive"
-          width={0}
-          height={0}
-          objectFit="contain"
-          className={`object-contain max-w-1/3 w-auto max-h-[35px]`}
-        />
+        <div className="flex-shrink-0 mx-2">
+          <Image
+            src={cameraSrc}
+            alt=""
+            width={35}
+            height={35}
+            objectFit="contain"
+            className="object-contain w-auto sm:max-h-[35px] max-h-[15px]"
+          />
+        </div>
       )}
 
-      <div>
+      <div className="flex-shrink overflow-hidden hidden sm:block">
         {iso && (
           <p
-            className="font-bold mb-1 flex gap-[5px] text-nowrap"
+            className="font-bold mb-1 flex gap-[5px] text-nowrap overflow-hidden"
             style={{ color: textColors.main }}>
             {focalLen && <span>{focalLen}mm</span>}
             {iso && <span>ISO{iso}</span>}
@@ -96,7 +97,7 @@ export default function Exinfo(props: ExinfoProps) {
           </p>
         )}
         {latitude && longitude && (
-          <p className="flex items-center gap-[2px]">
+          <p className="flex items-center text-nowrap overflow-hidden">
             {`${latitude} ${longitude}`}
           </p>
         )}
