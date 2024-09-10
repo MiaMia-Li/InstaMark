@@ -292,6 +292,10 @@ function PicContent() {
     };
 
     if (method in methodMap) {
+      gtag("event", "setting_photo", {
+        method,
+        value,
+      });
       (methodMap as any)[method](value);
     }
   }, []);
