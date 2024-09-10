@@ -20,7 +20,7 @@ const ShareDialog: React.FC<ShareDialogProps> = ({ imageUrl, onClose }) => {
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
         transition={{ duration: 0.3 }}
-        className="bg-gradient-to-br from-indigo-500 to-purple-600 p-6 rounded-2xl shadow-2xl w-full max-w-sm sm:max-w-md">
+        className="relative bg-gradient-to-br from-indigo-500 to-purple-600 p-6 rounded-2xl shadow-2xl w-full max-w-sm sm:max-w-md">
         <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-white text-center">
           Woohoo! Your masterpiece is ready! 🎉
         </h2>
@@ -28,8 +28,8 @@ const ShareDialog: React.FC<ShareDialogProps> = ({ imageUrl, onClose }) => {
           Your photo looks absolutely fantastic! Why not show it off to the
           world on Twitter?
         </p>
-        <div className="flex justify-center mb-4">
-          <TwitterShareButton />
+        <div className="flex justify-center">
+          <TwitterShareButton key={imageUrl} />
         </div>
         <button
           onClick={onClose}
