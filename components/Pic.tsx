@@ -27,8 +27,6 @@ import ShareDialog from "./ShareDialog";
 import PreviewDialog from "./PreviewDialog";
 
 function PicContent() {
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
   const { color, setColor } = useColor();
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [exifData, setExifData] = useState({});
@@ -198,6 +196,8 @@ function PicContent() {
 
   const generateImg = async () => {
     setIsExporting(true);
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
     if (exportRef.current) {
       const element = exportRef.current;
       const { width, height } = element.getBoundingClientRect();
