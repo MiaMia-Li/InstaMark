@@ -13,7 +13,7 @@ import React, {
   SetStateAction,
 } from "react";
 import Exif from "exif-js";
-import { CAMERA_BRAND, COLOR_MAP } from "@/lib/config";
+import { CAMERA_BRAND, COLOR_MAP, sleep } from "@/lib/config";
 import { tailwindToCSS, isEmptyObj } from "@/lib/color";
 import html2canvas from "html2canvas";
 import { useDropzone, FileRejection, DropEvent } from "react-dropzone";
@@ -26,6 +26,8 @@ import Confetti from "./Confetti";
 import ShareDialog from "./ShareDialog";
 
 function PicContent() {
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
   const { color, setColor } = useColor();
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [exifData, setExifData] = useState({});
@@ -33,7 +35,7 @@ function PicContent() {
   const [borderRadius, setBorderRadius] = useState(10);
   const [backgroundColor, setBackgroundColor] = useState("#fff");
   const [textColor, setTextColor] = useState("dark");
-  const [textSize, setTextSize] = useState("lg");
+  const [textSize, setTextSize] = useState("medium");
   const [showCameraInfo, setShowCameraInfo] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
   const [noExif, setNoExif] = useState(false);
@@ -43,15 +45,6 @@ function PicContent() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const exportRef = useRef<HTMLDivElement>(null);
   const [exportedImageUrl, setExportedImageUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (showConfetti) {
-      setTimeout(() => {
-        setShowConfetti(false);
-        setShowShareDialog(true);
-      }, 3000); // 5秒后显示分享对话框
-    }
-  }, [showConfetti]);
 
   const handleFile = useCallback((file: File) => {
     if (file && file.type.startsWith("image/")) {
@@ -170,14 +163,38 @@ function PicContent() {
     });
   };
 
-  const handleExport = async () => {
+  const exportToPc = (image) => {
+    setIsExporting(true);
+    const link = document.createElement("a");
+    link.href = image;
+    link.download = new Date().toISOString().replace(/:/g, "-") + ".png";
+    link.click();
+    setShowConfetti(true);
+    sleep(3000).then(() => {
+      setShowConfetti(false);
+      setShowShareDialog(true);
+      setIsExporting(false);
+    });
+    document.body.removeChild(wrapper);
+    gtag("event", "download_photo");
+  };
+
+  const exportToM = (image) => {
+    console.log("--image", image);
+    const img = document.createElement("img");
+    img.src = image;
+    img.style.position = "absolute";
+    img.style.top = 0;
+    img.style.left = 0;
+    img.style.zIndex = 999;
+    exportRef.appendChild(img); // 添加：将图像添加到文档中
+  };
+
+  const generateImg = async () => {
     if (exportRef.current) {
-      setIsExporting(true);
       const element = exportRef.current;
       const { width, height } = element.getBoundingClientRect();
-
       // Adjust the scale for mobile (iPhone) devices
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       const scale = isMobile ? 2 : 3;
 
       // Create a temporary wrapper div
@@ -204,6 +221,7 @@ function PicContent() {
           width: width,
           height: height,
           scale: scale,
+          // dpi: window.devicePixelRatio * 2,
           useCORS: true,
           backgroundColor: null,
           logging: false,
@@ -215,10 +233,27 @@ function PicContent() {
             );
             if (clonedElement instanceof HTMLElement) {
               const styles = window.getComputedStyle(element);
-              Object.values(styles).forEach((key) => {
-                // @ts-ignore
-                clonedElement.style[key] = styles[key];
-              });
+              console.log("--styles", styles);
+              // 应用 exportRef 和其所有子元素的样式
+              const applyStyles = (
+                source: HTMLElement,
+                target: HTMLElement
+              ) => {
+                const sourceStyles = window.getComputedStyle(source);
+                Object.values(sourceStyles).forEach((key) => {
+                  // @ts-ignore
+                  target.style[key] = sourceStyles[key];
+                });
+                Array.from(source.children).forEach((child, index) => {
+                  if (target.children[index]) {
+                    applyStyles(
+                      child as HTMLElement,
+                      target.children[index] as HTMLElement
+                    );
+                  }
+                });
+              };
+              applyStyles(element, clonedElement); // 应用样式
               // Ensure borderRadius is applied
               clonedElement.style.borderRadius = `${borderRadius}px`;
             }
@@ -280,27 +315,24 @@ function PicContent() {
           }
           ctx.fillStyle = gradient;
           ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
-
-          // Draw content
           ctx.drawImage(canvas, 0, 0);
           ctx.restore();
         }
-
-        // Export image
         const image = finalCanvas.toDataURL("image/png");
         setExportedImageUrl(image);
-        const link = document.createElement("a");
-        link.href = image;
-        link.download = new Date().toISOString().replace(/:/g, "-") + ".png";
-        link.click();
-      } finally {
-        // Clean up temporary elements
-        setShowConfetti(true);
-        setTimeout(() => setShowConfetti(false), 3000); // 5 seconds for confetti effect
-        document.body.removeChild(wrapper);
-        setIsExporting(false);
-        gtag("event", "download_photo");
-      }
+        // if (isMobile) {
+        //   exportToM(image);
+        // } else {
+        //   exportToPc(image);
+        // }
+        const img = document.createElement("img");
+        img.src = image;
+        img.style.position = "absolute";
+        img.style.top = 0;
+        img.style.left = 0;
+        img.style.zIndex = 999;
+        document.body.appendChild(img);
+      } catch (e) {}
     }
   };
 
@@ -326,136 +358,138 @@ function PicContent() {
   }, []);
 
   return (
-    <div className="flex flex-col h-full w-full gap-10 px-4 md:px-10 md:flex-row">
-      <div className="relative">
-        <AnimatePresence>
-          {showConfetti && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}>
-              <Confetti />
-            </motion.div>
-          )}
-        </AnimatePresence>
-        <motion.div
-          animate={{ filter: showConfetti ? "blur(5px)" : "blur(0px)" }}
-          transition={{ duration: 0.5 }}
-          className="flex flex-col h-full w-full gap-10 px-4 md:px-10 md:flex-row">
-          {/* ... 其他 JSX 保持不变 */}
-        </motion.div>
-        <AnimatePresence>
-          {showShareDialog && (
-            <ShareDialog
-              imageUrl={exportedImageUrl}
-              onClose={() => setShowShareDialog(false)}
-            />
-          )}
-        </AnimatePresence>
-      </div>
-      <div className="flex-1">
-        <div className="text-center my-4 md:my-8">
-          <h1 className="text-3xl font-bold mb-4 text-indigo-600">
-            Upload, Beautify, and Personalize Your Picture
-          </h1>
-          <p className="text-gray-700 leading-relaxed max-w-2xl mx-auto">
-            Discover our free, privacy-focused image tool. Enhance your photos
-            locally, without uploads server. Enjoy secure, cost-free
-            personalization. Transform your pictures easily and safely.
-          </p>
-        </div>
-        <div
-          className={`shadow-md rounded p-4 duration-200 transform-gpu transition-all ease-linear w-full overflow-hidden`}
-          ref={exportRef}
-          style={{
-            padding: padding,
-            borderRadius: borderRadius,
-            background: backgroundColor,
-          }}>
-          <div className="w-full">
-            {!imageSrc ? (
-              <div
-                {...getRootProps()}
-                className={`
+    <div>
+      {showConfetti && <Confetti />}
+      {showShareDialog && (
+        <ShareDialog
+          imageUrl={exportedImageUrl}
+          onClose={() => setShowShareDialog(false)}
+        />
+      )}
+      <div className="flex flex-col h-full w-full gap-x-10 px-4 md:px-10 md:flex-row">
+        <div className="flex-1">
+          <div className="text-center my-4 md:my-8">
+            <h1 className="text-3xl font-bold mb-4 text-indigo-600">
+              Upload, Beautify, and Personalize Your Picture
+            </h1>
+            <p className="text-gray-700 leading-relaxed max-w-2xl mx-auto">
+              Discover our free, privacy-focused image tool. Enhance your photos
+              locally, without uploads server. Enjoy secure, cost-free
+              personalization. Transform your pictures easily and safely.
+            </p>
+          </div>
+          <div
+            className={`shadow-md rounded p-4 duration-200 transform-gpu transition-all ease-linear w-full overflow-hidden`}
+            ref={exportRef}
+            style={{
+              padding: padding,
+              borderRadius: borderRadius,
+              background: backgroundColor,
+              fontSize:
+                textSize === "small" ? 12 : textSize === "medium" ? 14 : 16,
+            }}>
+            <div className="w-full">
+              {!imageSrc ? (
+                <div
+                  {...getRootProps()}
+                  className={`
                 w-full h-64 border-2 border-dashed rounded-lg 
                 flex flex-col items-center justify-center cursor-pointer 
                 transition-all duration-300 ease-in-out
                 border-gray-300 text-gray-500
                 hover:border-blue-500 hover:bg-blue-50 hover:shadow-lg
               `}>
-                <input {...getInputProps()} />
-                <Image src="/click.svg" alt="Upload" width={120} height={120} />
-                <p className="mt-2 font-bold">Drag or click your Image here!</p>
-              </div>
-            ) : (
-              <div>
-                <Image
-                  style={{
-                    aspectRatio:
-                      exportRatio === "auto"
-                        ? "auto"
-                        : exportRatio.replace(":", "/"),
-                  }}
-                  src={imageSrc}
-                  alt="Uploaded"
-                  width={500}
-                  height={300}
-                  className="w-full h-auto"
-                  unoptimized
-                />
-              </div>
-            )}
+                  <input {...getInputProps()} />
+                  <Image
+                    src="/click.svg"
+                    alt="Upload"
+                    width={120}
+                    height={120}
+                  />
+                  <p className="mt-2 font-bold">
+                    Drag or click your Image here!
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  <Image
+                    style={{
+                      aspectRatio:
+                        exportRatio === "auto"
+                          ? "auto"
+                          : exportRatio.replace(":", "/"),
+                    }}
+                    src={imageSrc}
+                    alt="Uploaded"
+                    width={500}
+                    height={300}
+                    className="w-full h-auto pointer-events-none"
+                    unoptimized
+                  />
+                </div>
+              )}
 
-            {showCameraInfo && (
-              <div className="pt-4">
-                <Exinfo
-                  bgColor={backgroundColor}
-                  textColor={textColor}
-                  textSize={textSize}
-                  data={exifData}
+              {showCameraInfo && (
+                <div style={{ paddingTop: 16 }}>
+                  <Exinfo
+                    bgColor={backgroundColor}
+                    textColor={textColor}
+                    textSize={textSize}
+                    data={exifData}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {imageSrc && (
+            <div className="flex items-center w-full my-5 gap-5">
+              <div className="flex-1">
+                <Btn3d handleClick={handleReupload} text="Reupload Picture" />
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  accept="image/*"
+                  className="hidden"
                 />
               </div>
-            )}
-          </div>
+              <div className="flex-1">
+                <Btn3d
+                  handleClick={generateImg}
+                  text="Export Picture"
+                  loading={isExporting}
+                />
+              </div>
+              <div
+                className="flex-1"
+                onTouchStart={() => {
+                  // 开始长按
+                  // handleLongPress();
+                }}
+                onTouchEnd={() => {
+                  // 结束长按
+                }}>
+                <Btn3d text="Press and hold to save the picture" />
+              </div>
+            </div>
+          )}
         </div>
-
-        {imageSrc && (
-          <div className="flex items-center w-full my-5 gap-5">
-            <div className="flex-1">
-              <Btn3d handleClick={handleReupload} text="Upload" />
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileChange}
-                accept="image/*"
-                className="hidden"
-              />
-            </div>
-            <div className="flex-1">
-              <Btn3d
-                handleClick={handleExport}
-                text="Export"
-                loading={isExporting}
-              />
-            </div>
+        <div className="mt-2 w-full md:w-1/4 min-w-[300px] h-full flex-shrink-0 md:sticky md:top-0">
+          <div className="rounded-md shadow-sm p-4 md:sticky md:top-0">
+            <Panel
+              textSize={textSize}
+              textColor={textColor}
+              padding={padding}
+              borderRadius={borderRadius}
+              exifData={exifData}
+              showCameraInfo={showCameraInfo}
+              onChange={handleChange}
+              imageSrc={imageSrc}
+              noExif={noExif}
+              exportRatio={exportRatio}
+            />
           </div>
-        )}
-      </div>
-      <div className="mt-2 w-full md:w-1/4 min-w-[300px] h-full flex-shrink-0">
-        <div className="rounded-md shadow-sm p-4 md:sticky md:top-0">
-          <Panel
-            textSize={textSize}
-            textColor={textColor}
-            padding={padding}
-            borderRadius={borderRadius}
-            exifData={exifData}
-            showCameraInfo={showCameraInfo}
-            onChange={handleChange}
-            imageSrc={imageSrc}
-            noExif={noExif}
-            exportRatio={exportRatio}
-          />
         </div>
       </div>
     </div>

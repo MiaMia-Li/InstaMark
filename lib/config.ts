@@ -95,3 +95,11 @@ export const SOCIAL_MEDIA = [
 export const getSocialMedia = (ids: string[]) => {
   return SOCIAL_MEDIA.filter((media) => ids.includes(media.id));
 };
+
+export function sleep(timeout) {
+  return new Promise<void>((resolve, reject) => {
+    setTimeout(() => {
+      resolve();
+    }, timeout);
+  });
+}

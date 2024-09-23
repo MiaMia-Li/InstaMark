@@ -31,13 +31,12 @@ const Btn3d: React.FC<Btn3dProps> = ({
             ? "bg-gray-100 border-gray-300 text-gray-500"
             : "bg-white border-gray-500 hover:translate-y-2"
         } transition transform duration-200`}>
-        {loading ? (
+        {loading && (
           <>
             <AiOutlineLoading3Quarters className="inline-block animate-spin text-2xl mr-2" />
           </>
-        ) : (
-          text
         )}
+        {text}
       </div>
     </button>
   );

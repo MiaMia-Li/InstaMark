@@ -15,7 +15,7 @@ function Foo() {
         <a
           target="_blank"
           href="https://www.linkedin.com/in/mengyao-li-software/">
-          MiaMia
+          Mia
         </a>
       </p>
     </div>

@@ -50,18 +50,22 @@ export default function Exinfo(props: ExinfoProps) {
   }, [make]);
 
   const textSizeClass = useMemo(() => {
-    return textSize ? `text-${textSize}` : "text-md";
+    return textSize === "small"
+      ? "12px"
+      : textSize === "medium"
+      ? "14px"
+      : "16px";
   }, [textSize]);
 
   return (
     <div
-      className={`flex items-center justify-between overflow-hidden ${textSizeClass} transition-all duration-300 ease-in-out`}
-      style={{ color: textColors.desc }}>
+      className={`flex items-center justify-between overflow-hidden transition-all duration-300 ease-in-out`}
+      style={{ color: textColors.desc, fontSize: textSizeClass }}>
       <div className="flex-shrink-0">
         {model && (
           <p
-            className="font-bold mb-1 text-nowrap"
-            style={{ color: textColors.main }}>
+            className="font-bold text-nowrap"
+            style={{ color: textColors.main, marginBottom: 4 }}>
             {model}
           </p>
         )}
@@ -88,8 +92,8 @@ export default function Exinfo(props: ExinfoProps) {
       <div className="flex-shrink overflow-hidden hidden sm:block">
         {iso && (
           <p
-            className="font-bold mb-1 flex gap-[5px] text-nowrap overflow-hidden"
-            style={{ color: textColors.main }}>
+            className="font-bold flex gap-[5px] text-nowrap overflow-hidden"
+            style={{ color: textColors.main, marginBottom: 4 }}>
             {focalLen && <span>{focalLen}mm</span>}
             {iso && <span>ISO{iso}</span>}
             {aperture && <span>F{aperture} </span>}

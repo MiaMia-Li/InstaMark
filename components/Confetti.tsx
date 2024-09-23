@@ -67,6 +67,7 @@ const Confetti: React.FC<ConfettiProps> = ({ count = 100 }) => {
         width: "100%",
         height: "100%",
         pointerEvents: "none",
+        zIndex: 999,
       }}>
       {confetti}
     </div>

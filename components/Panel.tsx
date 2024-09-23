@@ -179,8 +179,8 @@ export default function Panel(props: PanelProps) {
                   type="radio"
                   className="form-radio text-blue-600"
                   name="textSize"
-                  value="md"
-                  checked={textSize === "md"}
+                  value="small"
+                  checked={textSize === "small"}
                   onChange={(e) => onChange("setTextSize", e.target.value)}
                 />
                 <span className="ml-2 text-sm text-gray-700">Small</span>
@@ -190,8 +190,8 @@ export default function Panel(props: PanelProps) {
                   type="radio"
                   className="form-radio text-blue-600"
                   name="textSize"
-                  value="lg"
-                  checked={textSize === "lg"}
+                  value="medium"
+                  checked={textSize === "medium"}
                   onChange={(e) => onChange("setTextSize", e.target.value)}
                 />
                 <span className="ml-2 text-sm text-gray-700">Medium</span>
@@ -201,8 +201,8 @@ export default function Panel(props: PanelProps) {
                   type="radio"
                   className="form-radio text-blue-600"
                   name="textSize"
-                  value="xl"
-                  checked={textSize === "xl"}
+                  value="large"
+                  checked={textSize === "large"}
                   onChange={(e) => onChange("setTextSize", e.target.value)}
                 />
                 <span className="ml-2 text-sm text-gray-700">Large</span>
