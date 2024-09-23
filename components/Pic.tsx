@@ -24,6 +24,7 @@ import ColorPop from "./ColorPop";
 import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "./Confetti";
 import ShareDialog from "./ShareDialog";
+import PreviewDialog from "./PreviewDialog";
 
 function PicContent() {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -163,39 +164,45 @@ function PicContent() {
     });
   };
 
-  const exportToPc = (image) => {
-    setIsExporting(true);
-    const link = document.createElement("a");
-    link.href = image;
-    link.download = new Date().toISOString().replace(/:/g, "-") + ".png";
-    link.click();
-    setShowConfetti(true);
-    sleep(3000).then(() => {
-      setShowConfetti(false);
-      setShowShareDialog(true);
-      setIsExporting(false);
-    });
-    document.body.removeChild(wrapper);
-    gtag("event", "download_photo");
-  };
+  const handleDownload = () => {
+    // 将 base64 数据转换为 Blob
+    if (exportedImageUrl) {
+      const byteCharacters = atob(exportedImageUrl.split(",")[1]); // 获取 Base64 数据
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: "image/png" });
+      const blobUrl = URL.createObjectURL(blob);
 
-  const exportToM = (image) => {
-    console.log("--image", image);
-    const img = document.createElement("img");
-    img.src = image;
-    img.style.position = "absolute";
-    img.style.top = 0;
-    img.style.left = 0;
-    img.style.zIndex = 999;
-    exportRef.appendChild(img); // 添加：将图像添加到文档中
+      // 创建下载链接
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = new Date().toISOString().replace(/:/g, "-") + ".png";
+      link.click();
+
+      // 清理 Blob URL
+      URL.revokeObjectURL(blobUrl);
+
+      setShowShareDialog(false);
+      setShowConfetti(true);
+      sleep(3000).then(() => {
+        setShowConfetti(false);
+        // setShowShareDialog(true);
+        // setIsExporting(false);
+      });
+      gtag("event", "download_photo");
+    }
   };
 
   const generateImg = async () => {
+    setIsExporting(true);
     if (exportRef.current) {
       const element = exportRef.current;
       const { width, height } = element.getBoundingClientRect();
       // Adjust the scale for mobile (iPhone) devices
-      const scale = isMobile ? 2 : 3;
+      const scale = isMobile ? 5 : 10;
 
       // Create a temporary wrapper div
       const wrapper = document.createElement("div");
@@ -227,37 +234,6 @@ function PicContent() {
           logging: false,
           imageTimeout: 0,
           allowTaint: true,
-          onclone: (clonedDoc) => {
-            const clonedElement = clonedDoc.body.querySelector(
-              "[data-export-wrapper]"
-            );
-            if (clonedElement instanceof HTMLElement) {
-              const styles = window.getComputedStyle(element);
-              console.log("--styles", styles);
-              // 应用 exportRef 和其所有子元素的样式
-              const applyStyles = (
-                source: HTMLElement,
-                target: HTMLElement
-              ) => {
-                const sourceStyles = window.getComputedStyle(source);
-                Object.values(sourceStyles).forEach((key) => {
-                  // @ts-ignore
-                  target.style[key] = sourceStyles[key];
-                });
-                Array.from(source.children).forEach((child, index) => {
-                  if (target.children[index]) {
-                    applyStyles(
-                      child as HTMLElement,
-                      target.children[index] as HTMLElement
-                    );
-                  }
-                });
-              };
-              applyStyles(element, clonedElement); // 应用样式
-              // Ensure borderRadius is applied
-              clonedElement.style.borderRadius = `${borderRadius}px`;
-            }
-          },
         });
 
         // Create a final canvas to draw background and content
@@ -267,7 +243,6 @@ function PicContent() {
         const ctx = finalCanvas.getContext("2d");
 
         if (ctx) {
-          // Draw background
           ctx.save();
           ctx.beginPath();
           ctx.moveTo(borderRadius * scale, 0);
@@ -319,19 +294,10 @@ function PicContent() {
           ctx.restore();
         }
         const image = finalCanvas.toDataURL("image/png");
+        document.body.removeChild(wrapper);
         setExportedImageUrl(image);
-        // if (isMobile) {
-        //   exportToM(image);
-        // } else {
-        //   exportToPc(image);
-        // }
-        const img = document.createElement("img");
-        img.src = image;
-        img.style.position = "absolute";
-        img.style.top = 0;
-        img.style.left = 0;
-        img.style.zIndex = 999;
-        document.body.appendChild(img);
+        setShowShareDialog(true);
+        setIsExporting(false);
       } catch (e) {}
     }
   };
@@ -360,12 +326,14 @@ function PicContent() {
   return (
     <div>
       {showConfetti && <Confetti />}
-      {showShareDialog && (
-        <ShareDialog
+      {showShareDialog && exportedImageUrl && (
+        <PreviewDialog
           imageUrl={exportedImageUrl}
           onClose={() => setShowShareDialog(false)}
+          onDownload={handleDownload}
         />
       )}
+
       <div className="flex flex-col h-full w-full gap-x-10 px-4 md:px-10 md:flex-row">
         <div className="flex-1">
           <div className="text-center my-4 md:my-8">
@@ -385,61 +353,46 @@ function PicContent() {
               padding: padding,
               borderRadius: borderRadius,
               background: backgroundColor,
-              fontSize:
-                textSize === "small" ? 12 : textSize === "medium" ? 14 : 16,
             }}>
-            <div className="w-full">
-              {!imageSrc ? (
-                <div
-                  {...getRootProps()}
-                  className={`
+            {!imageSrc ? (
+              <div
+                {...getRootProps()}
+                className={`
                 w-full h-64 border-2 border-dashed rounded-lg 
                 flex flex-col items-center justify-center cursor-pointer 
                 transition-all duration-300 ease-in-out
                 border-gray-300 text-gray-500
                 hover:border-blue-500 hover:bg-blue-50 hover:shadow-lg
               `}>
-                  <input {...getInputProps()} />
-                  <Image
-                    src="/click.svg"
-                    alt="Upload"
-                    width={120}
-                    height={120}
-                  />
-                  <p className="mt-2 font-bold">
-                    Drag or click your Image here!
-                  </p>
-                </div>
-              ) : (
-                <div>
-                  <Image
-                    style={{
-                      aspectRatio:
-                        exportRatio === "auto"
-                          ? "auto"
-                          : exportRatio.replace(":", "/"),
-                    }}
-                    src={imageSrc}
-                    alt="Uploaded"
-                    width={500}
-                    height={300}
-                    className="w-full h-auto pointer-events-none"
-                    unoptimized
-                  />
-                </div>
-              )}
+                <input {...getInputProps()} />
+                <Image src="/click.svg" alt="Upload" width={120} height={120} />
+                <p className="mt-2 font-bold">Drag or click your Image here!</p>
+              </div>
+            ) : (
+              <Image
+                style={{
+                  aspectRatio:
+                    exportRatio === "auto"
+                      ? "auto"
+                      : exportRatio.replace(":", "/"),
+                }}
+                src={imageSrc}
+                alt="Uploaded"
+                width={500}
+                height={300}
+                className="w-full h-auto pointer-events-none"
+                unoptimized
+              />
+            )}
 
-              {showCameraInfo && (
-                <div style={{ paddingTop: 16 }}>
-                  <Exinfo
-                    bgColor={backgroundColor}
-                    textColor={textColor}
-                    textSize={textSize}
-                    data={exifData}
-                  />
-                </div>
-              )}
-            </div>
+            {showCameraInfo && (
+              <Exinfo
+                bgColor={backgroundColor}
+                textColor={textColor}
+                textSize={textSize}
+                data={exifData}
+              />
+            )}
           </div>
 
           {imageSrc && (
@@ -460,17 +413,6 @@ function PicContent() {
                   text="Export Picture"
                   loading={isExporting}
                 />
-              </div>
-              <div
-                className="flex-1"
-                onTouchStart={() => {
-                  // 开始长按
-                  // handleLongPress();
-                }}
-                onTouchEnd={() => {
-                  // 结束长按
-                }}>
-                <Btn3d text="Press and hold to save the picture" />
               </div>
             </div>
           )}

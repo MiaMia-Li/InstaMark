@@ -7,28 +7,48 @@ import {
 } from "react-icons/ri";
 import { SiBuymeacoffee } from "react-icons/si";
 
-export const CAMERA_BRAND = [
-  { key: "Canon", src: "/camera/Canon.svg" },
-  { key: "Fujifilm", src: "/camera/Fujifilm.svg" },
-  { key: "Gopro", src: "/camera/Gopro.svg" },
-  { key: "Leica", src: "/camera/Leica.svg" },
-  { key: "Nikon", src: "/camera/Nikon.svg" },
-  { key: "Olympus", src: "/camera/Olympus.svg" },
-  { key: "Sony", src: "/camera/Sony.svg" },
-  { key: "Apple", src: "/camera/Apple.svg" },
-  { key: "DJI", src: "/camera/DJI.svg" },
-  { key: "Vivo", src: "/camera/Vivo.svg" },
-  { key: "Oppo", src: "/camera/Oppo.svg" },
-  { key: "Huawei", src: "/camera/Huawei.svg" },
-  { key: "Xiaomi", src: "/camera/Xiaomi.svg" },
-  { key: "Realme", src: "/camera/Realme.svg" },
-  { key: "Insta360", src: "/camera/Insta360.svg" },
-  { key: "Panasonic", src: "/camera/Panasonic.svg" },
-  { key: "Pentax", src: "/camera/Pentax.svg" },
-  { key: "Samsung", src: "/camera/Samsung.svg" },
-  { key: "Sigma", src: "/camera/Sigma.svg" },
+import CanonSvg from "@/public/camera/Canon.svg";
+import FujifilmSvg from "@/public/camera/Fujifilm.svg";
+import GoproSvg from "@/public/camera/Gopro.svg";
+import LeicaSvg from "@/public/camera/Leica.svg";
+import NikonSvg from "@/public/camera/Nikon.svg";
+import OlympusSvg from "@/public/camera/Olympus.svg";
+import SonySvg from "@/public/camera/Sony.svg";
+import AppleSvg from "@/public/camera/Apple.svg";
+import DJISvg from "@/public/camera/DJI.svg";
+import VivoSvg from "@/public/camera/Vivo.svg";
+import OppoSvg from "@/public/camera/Oppo.svg";
+import HuaweiSvg from "@/public/camera/Huawei.svg";
+import XiaomiSvg from "@/public/camera/Xiaomi.svg";
+import RealmeSvg from "@/public/camera/Realme.svg";
+import Insta360Svg from "@/public/camera/Insta360.svg";
+import PanasonicSvg from "@/public/camera/Panasonic.svg";
+import PentaxSvg from "@/public/camera/Pentax.svg";
+import SamsungSvg from "@/public/camera/Samsung.svg";
+import SigmaSvg from "@/public/camera/Sigma.svg";
 
-  // 添加更多图片路径
+export const CAMERA_BRAND = [
+  { key: "Canon", src: "/camera/Canon.svg", svg: CanonSvg },
+  { key: "Fujifilm", src: "/camera/Fujifilm.svg", svg: FujifilmSvg },
+  { key: "Gopro", src: "/camera/Gopro.svg", svg: GoproSvg },
+  { key: "Leica", src: "/camera/Leica.svg", svg: LeicaSvg },
+  { key: "Nikon", src: "/camera/Nikon.svg", svg: NikonSvg },
+  { key: "Olympus", src: "/camera/Olympus.svg", svg: OlympusSvg },
+  { key: "Sony", src: "/camera/Sony.svg", svg: SonySvg },
+  { key: "Apple", src: "/camera/Apple.svg", svg: AppleSvg },
+  { key: "DJI", src: "/camera/DJI.svg", svg: DJISvg },
+  { key: "Vivo", src: "/camera/Vivo.svg", svg: VivoSvg },
+  { key: "Oppo", src: "/camera/Oppo.svg", svg: OppoSvg },
+  { key: "Huawei", src: "/camera/Huawei.svg", svg: HuaweiSvg },
+  { key: "Xiaomi", src: "/camera/Xiaomi.svg", svg: XiaomiSvg },
+  { key: "Realme", src: "/camera/Realme.svg", svg: RealmeSvg },
+  { key: "Insta360", src: "/camera/Insta360.svg", svg: Insta360Svg },
+  { key: "Panasonic", src: "/camera/Panasonic.svg", svg: PanasonicSvg },
+  { key: "Pentax", src: "/camera/Pentax.svg", svg: PentaxSvg },
+  { key: "Samsung", src: "/camera/Samsung.svg", svg: SamsungSvg },
+  { key: "Sigma", src: "/camera/Sigma.svg", svg: SigmaSvg },
+
+  // 添加更多品牌
 ];
 
 export const COLOR_MAP = new Map([
@@ -96,7 +116,7 @@ export const getSocialMedia = (ids: string[]) => {
   return SOCIAL_MEDIA.filter((media) => ids.includes(media.id));
 };
 
-export function sleep(timeout) {
+export function sleep(timeout: number) {
   return new Promise<void>((resolve, reject) => {
     setTimeout(() => {
       resolve();

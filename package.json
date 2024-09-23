@@ -15,6 +15,7 @@
     "framer-motion": "^11.3.30",
     "html2canvas": "^1.4.1",
     "next": "14.2.6",
+    "next-plugin-svgr": "^1.1.10",
     "react": "^18",
     "react-dom": "^18",
     "react-dropzone": "^14.2.3",
