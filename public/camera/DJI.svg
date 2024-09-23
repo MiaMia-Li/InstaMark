@@ -1,18 +1,1 @@
-<svg width="2500" height="1445" viewBox="0 0 2500 1445" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g filter="url(#filter0_d_20_55)">
-<path d="M1829.68 1048.85L2013.94 283.466H1618.39L1449.83 969.926C1425.36 1103.71 1281.56 1166.34 1179.48 1167.94H899.167L804.074 1443.86H1393.07C1538.35 1443.86 1752.95 1369.5 1829.68 1048.85Z" fill="#0971CE"/>
-<path d="M999.41 778.945L1185.34 0.94519H1592.38L1380.8 885.89C1340.09 1056.77 1213.06 1097.82 1095.75 1097.82H157.422C54.0322 1097.82 -32.59 1053.86 14.3352 856.562L98.8248 503.557C141.661 324.564 274.794 283.622 371.073 283.622H1025.95L973.223 504.209H638.881C589.704 504.209 562.745 514.873 548.999 572.285L495.082 797.611C475.768 878.486 504.029 884.113 563.337 884.113H869.655C925.765 884.113 975.057 880.558 999.41 778.945ZM2103.32 283.516L1911.71 1097.9H2307.2L2498.75 283.516H2103.32Z" fill="#0971CE"/>
-</g>
-<defs>
-<filter id="filter0_d_20_55" x="-2.75098" y="0.94519" width="2505.5" height="1450.91" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
-<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-<feOffset dy="4"/>
-<feGaussianBlur stdDeviation="2"/>
-<feComposite in2="hardAlpha" operator="out"/>
-<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
-<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_20_55"/>
-<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_20_55" result="shape"/>
-</filter>
-</defs>
-</svg>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 504 290" width="2500" height="1438"><style>.st0{fill:#0656a5}</style><path class="st0" d="M427 57.4h77l-38.2 162h-76.9l38.1-162zm-98.6 0h76.9L368 212.6c-9 37.6-35 77.4-88.4 77.4H164.3l17.7-52.6h53c25 0 52.9-13.8 59-38.8l34.4-141.2zM319.3 0h-79.2l-36.9 155.5c-3.6 15.1-8.6 23.8-26.6 23.8h-67.3c-15.3 0-14.9-9-11.7-22l10.4-43c2.6-10.7 6.1-15.5 20.3-15.5h66.3l9.9-41.5H75.7c-30.5 0-48.9 14.7-56.1 45L2.2 175c-7.2 30.4 4 44.4 26 44.4h188.2c39.5 0 54.8-15.4 61.7-44.7L319.3 0z"/></svg>

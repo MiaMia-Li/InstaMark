@@ -195,7 +195,7 @@ function PicContent() {
   };
 
   const generateImg = async () => {
-    setIsExporting(true);
+    // setIsExporting(true);
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
     if (exportRef.current) {
@@ -297,7 +297,7 @@ function PicContent() {
         document.body.removeChild(wrapper);
         setExportedImageUrl(image);
         setShowShareDialog(true);
-        setIsExporting(false);
+        // setIsExporting(false);
       } catch (e) {}
     }
   };
