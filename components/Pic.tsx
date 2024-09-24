@@ -202,13 +202,9 @@ function PicContent() {
 
     if (exportRef.current) {
       console.log("---start--generateImg");
-      if (screen.width < 1024) {
-        document
-          ?.querySelector('meta[name="viewport"]')
-          ?.setAttribute("content", "width=1200px");
-      }
       const element = exportRef.current;
       const { width, height } = element.getBoundingClientRect();
+      console.log("-width, height ", width, height);
       // Adjust the scale for mobile (iPhone) devices
       const scale = isMobile ? 3 : 6;
 
@@ -233,14 +229,14 @@ function PicContent() {
         }
 
         const canvas = await html2canvas(wrapper, {
-          width: width,
-          height: height,
+          // width: width,
+          // height: height,
           scale: scale,
           // dpi: window.devicePixelRatio * 2,
           useCORS: true,
           backgroundColor: null,
-          logging: false,
-          imageTimeout: 0,
+          logging: true,
+          // imageTimeout: 0,
           allowTaint: true,
         });
 
@@ -303,11 +299,6 @@ function PicContent() {
         }
         const image = finalCanvas.toDataURL("image/png");
         document.body.removeChild(wrapper);
-        if (screen.width < 1024) {
-          document
-            ?.querySelector('meta[name="viewport"]')
-            ?.setAttribute("content", "width=device-width, initial-scale=1");
-        }
         setExportedImageUrl(image);
         setShowShareDialog(true);
       } catch (e) {
