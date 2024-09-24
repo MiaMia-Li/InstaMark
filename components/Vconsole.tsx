@@ -10,6 +10,7 @@ export default function Vconsole() {
             navigator.userAgent
           );
           if (isMobile) {
+            //@ts-ignore
             new VConsole();
           }
         }}></Script>
