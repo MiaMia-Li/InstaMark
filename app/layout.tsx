@@ -11,6 +11,11 @@ const comic = Comic_Neue({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  initialScale: 1,
+  width: "device-width",
+};
+
 export const metadata: Metadata = {
   title: "PhotoTailor",
   description: "Upload, Beautify, and Personalize Your Picture!",

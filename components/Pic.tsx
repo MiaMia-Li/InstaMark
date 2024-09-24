@@ -202,6 +202,11 @@ function PicContent() {
 
     if (exportRef.current) {
       console.log("---start--generateImg");
+      if (screen.width < 1024) {
+        document
+          .querySelector('meta[name="viewport"]')
+          .setAttribute("content", "width=1200px");
+      }
       const element = exportRef.current;
       const { width, height } = element.getBoundingClientRect();
       // Adjust the scale for mobile (iPhone) devices
@@ -298,6 +303,11 @@ function PicContent() {
         }
         const image = finalCanvas.toDataURL("image/png");
         document.body.removeChild(wrapper);
+        if (screen.width < 1024) {
+          document
+            .querySelector('meta[name="viewport"]')
+            .setAttribute("content", "width=device-width, initial-scale=1");
+        }
         setExportedImageUrl(image);
         setShowShareDialog(true);
       } catch (e) {
