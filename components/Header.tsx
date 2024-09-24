@@ -2,7 +2,7 @@ import Image from "next/image";
 import { getSocialMedia } from "@/lib/config";
 export default function Header() {
   return (
-    <nav className="flex justify-between text-center py-4 px-4 md:px-10">
+    <nav className="flex justify-between text-center py-4 px-4 text-black md:px-10">
       <a href="/" className="flex items-center space-x-4">
         <div className="flex-shrink-0">
           <Image

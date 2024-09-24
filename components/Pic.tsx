@@ -182,27 +182,29 @@ function PicContent() {
 
       // 清理 Blob URL
       URL.revokeObjectURL(blobUrl);
-
-      setShowShareDialog(false);
+      handleClose();
       setShowConfetti(true);
       sleep(3000).then(() => {
         setShowConfetti(false);
-        // setShowShareDialog(true);
-        // setIsExporting(false);
       });
       gtag("event", "download_photo");
     }
   };
 
+  const handleClose = () => {
+    setShowShareDialog(false);
+    setIsExporting(false);
+  };
+
   const generateImg = async () => {
-    // setIsExporting(true);
+    setIsExporting(true);
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
     if (exportRef.current) {
       const element = exportRef.current;
       const { width, height } = element.getBoundingClientRect();
       // Adjust the scale for mobile (iPhone) devices
-      const scale = isMobile ? 5 : 10;
+      const scale = isMobile ? 3 : 6;
 
       // Create a temporary wrapper div
       const wrapper = document.createElement("div");
@@ -329,7 +331,7 @@ function PicContent() {
       {showShareDialog && exportedImageUrl && (
         <PreviewDialog
           imageUrl={exportedImageUrl}
-          onClose={() => setShowShareDialog(false)}
+          onClose={handleClose}
           onDownload={handleDownload}
         />
       )}
