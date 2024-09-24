@@ -201,6 +201,7 @@ function PicContent() {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
     if (exportRef.current) {
+      console.log("---start--generateImg");
       const element = exportRef.current;
       const { width, height } = element.getBoundingClientRect();
       // Adjust the scale for mobile (iPhone) devices
@@ -299,8 +300,10 @@ function PicContent() {
         document.body.removeChild(wrapper);
         setExportedImageUrl(image);
         setShowShareDialog(true);
-        // setIsExporting(false);
-      } catch (e) {}
+      } catch (e) {
+        console.log("e", e);
+        setIsExporting(false);
+      }
     }
   };
 
