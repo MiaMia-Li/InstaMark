@@ -40,27 +40,10 @@ export default function Exinfo(props: ExinfoProps) {
     return getTextColors(textColor || ""); // 提供默认值
   }, [textColor]);
 
-  // const camera = useMemo(() => {
-  //   const brand = make
-  //     ? CAMERA_BRAND.find((it) =>
-  //         make.toLowerCase().includes(it.key.toLowerCase())
-  //       )
-  //     : null;
-  //   return brand;
-  // }, [make]);
-
-  const textSizeClass = useMemo(() => {
-    return textSize === "small"
-      ? "text-sm"
-      : textSize === "medium"
-      ? "text-md"
-      : "text-lg";
-  }, [textSize]);
-
   return (
     <div
-      className={`${textSizeClass} h-auto flex items-center justify-between transition-all duration-300 ease-in-out`}
-      style={{ color: textColors.desc }}>
+      className={`h-auto flex items-end justify-between transition-all duration-300 ease-in-out`}
+      style={{ color: textColors.desc, fontSize: `${textSize}px` }}>
       <div className="flex-shrink-0">
         {model && (
           <div

@@ -123,6 +123,16 @@ export default function Panel(props: PanelProps) {
               />
             </div>
           </div>
+
+          <div className="flex flex-col space-y-4">
+            <label className="text-gray-700 text-sm">Text Size</label>
+            <div>
+              <InputRange
+                num={textSize}
+                handleChange={(num) => onChange("setTextSize", num)}
+              />
+            </div>
+          </div>
           <Divider />
 
           <div className="flex items-center justify-between">
@@ -171,7 +181,7 @@ export default function Panel(props: PanelProps) {
               </label>
             </div>
           </div>
-          <div className="flex items-center justify-between">
+          {/* <div className="flex items-center justify-between">
             <label className="text-gray-700 text-sm">Text Size</label>
             <div className="flex justify-end w-2/3">
               <label className="inline-flex items-center mr-4">
@@ -208,7 +218,7 @@ export default function Panel(props: PanelProps) {
                 <span className="ml-2 text-sm text-gray-700">Large</span>
               </label>
             </div>
-          </div>
+          </div> */}
 
           <div className="flex items-center justify-between">
             <label className="text-gray-700 text-sm ">Camera Logo</label>

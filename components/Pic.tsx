@@ -34,7 +34,7 @@ function PicContent() {
   const [borderRadius, setBorderRadius] = useState(10);
   const [backgroundColor, setBackgroundColor] = useState("#fff");
   const [textColor, setTextColor] = useState("dark");
-  const [textSize, setTextSize] = useState("medium");
+  const [textSize, setTextSize] = useState(20);
   const [showCameraInfo, setShowCameraInfo] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
   const [noExif, setNoExif] = useState(false);
@@ -206,7 +206,7 @@ function PicContent() {
       const { width, height } = element.getBoundingClientRect();
       console.log("-width, height ", width, height);
       // Adjust the scale for mobile (iPhone) devices
-      const scale = isMobile ? 3 : 6;
+      const scale = isMobile ? 2 : 3;
 
       // Create a temporary wrapper div
       const wrapper = document.createElement("div");
