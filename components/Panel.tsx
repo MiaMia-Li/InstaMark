@@ -22,7 +22,7 @@ interface PanelProps {
   padding: number;
   borderRadius: number;
   textColor: string;
-  textSize: string;
+  textSize: number;
   onChange: (method: string, value: any) => void;
   exifData: Record<string, any>;
   showCameraInfo: boolean;

@@ -19,7 +19,7 @@ interface ExinfoProps {
   type?: string;
   bgColor?: string;
   textColor?: string;
-  textSize?: string;
+  textSize?: number;
 }
 
 export default function Exinfo(props: ExinfoProps) {
