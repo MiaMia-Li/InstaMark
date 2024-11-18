@@ -16,7 +16,7 @@ export default function Header() {
         <div className="text-3xl font-bold">Photo Tailor</div>
       </a>
       <div className="flex items-center space-x-4">
-        {getSocialMedia(["buymeacoffee", "github"]).map((media) => (
+        {/* {getSocialMedia(["buymeacoffee", "github"]).map((media) => (
           <a
             href={media.href}
             key={media.id}
@@ -24,7 +24,7 @@ export default function Header() {
             aria-label={media.description}>
             <media.svg className="w-6 h-6" />
           </a>
-        ))}
+        ))} */}
         <a href="/about">About</a>
       </div>
     </nav>

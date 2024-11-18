@@ -84,7 +84,7 @@ export default function About() {
             easy-to-use tool for photo enthusiasts to enhance their images
             without compromising privacy.
           </p>
-          <p className="mt-2 text-base text-gray-700">
+          {/* <p className="mt-2 text-base text-gray-700">
             If you find this tool useful, please consider supporting the author
             by{" "}
             <a
@@ -93,7 +93,7 @@ export default function About() {
               href="https://www.buymeacoffee.com/sept.miamia">
               buying me a coffee.
             </a>
-          </p>
+          </p> */}
         </div>
 
         <div className="mt-10">
@@ -104,9 +104,9 @@ export default function About() {
             out to us at:
           </p>
           <a
-            href="mailto:superlmy.913@gmail.com"
+            href="mailto:support@snapstoryai.com"
             className="mt-2 inline-block text-blue-600 hover:text-blue-800">
-            superlmy.913@gmail.com
+            support@snapstoryai.com
           </a>
         </div>
       </div>
